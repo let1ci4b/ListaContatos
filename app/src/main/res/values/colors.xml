@@ -11,4 +11,5 @@
     <color name="card_icon">#282828</color>
     <color name="floating_action_button_bakground">#15B76C</color>
     <color name="divisor">#888888</color>
+    <color name="fabColor">#15B76C</color>
 </resources>
