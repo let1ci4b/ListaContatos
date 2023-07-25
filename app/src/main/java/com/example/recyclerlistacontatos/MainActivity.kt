@@ -1,7 +1,14 @@
 package com.example.recyclerlistacontatos
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.Window
+import android.view.WindowManager
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
         binding = MainLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -49,6 +58,33 @@ class MainActivity : AppCompatActivity() {
 
         newArrayList = arrayListOf<Contacts>()
         getUserdata()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+
+        //val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchItem = menu?.findItem(R.id.actionSearch)
+        val searchView = searchItem?.actionView as SearchView
+        //searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+        searchView.queryHint = "Pesquisar"
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchView.clearFocus()
+                searchView.setQuery("", false)
+                searchItem.collapseActionView()
+                Toast.makeText(this@MainActivity, "Looking for $query", Toast.LENGTH_LONG).show()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                Toast.makeText(this@MainActivity, "Looking for $newText", Toast.LENGTH_LONG).show()
+                return false
+            }
+        })
+        return true
     }
 
     private fun getUserdata() {

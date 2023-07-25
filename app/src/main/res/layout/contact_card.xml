@@ -27,8 +27,8 @@
             android:id="@+id/contactName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="5dp"
             android:textSize="16sp"
             android:textColor="@color/white"
             app:layout_constraintStart_toEndOf="@+id/contactImage"
@@ -41,6 +41,7 @@
             android:layout_height="0.5dp"
             android:layout_marginTop="5dp"
             android:layout_marginStart="10dp"
+
             android:background="@color/divisor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/contactImage"
@@ -50,6 +51,7 @@
             android:id="@+id/expandedLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toBottomOf="@+id/cardContact"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,20 +61,22 @@
                 android:id="@+id/contactNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="48dp"
                 android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="TELEFONE" />
 
             <ImageView
                 android:id="@+id/buttonCall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_call"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 app:layout_constraintStart_toStartOf="@+id/contactNumber"
                 app:layout_constraintTop_toBottomOf="@+id/contactNumber" />
 
@@ -81,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_message"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 app:layout_constraintStart_toEndOf="@+id/buttonCall"
                 app:layout_constraintEnd_toStartOf="@+id/buttonEdit"
                 app:layout_constraintTop_toBottomOf="@id/contactNumber" />
@@ -91,8 +95,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_edit"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="@id/contactNumber"
                 app:layout_constraintTop_toBottomOf="@+id/contactNumber"/>
 

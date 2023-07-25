@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Contatos</string>
+    <string name="add_contact_name">Novo contato</string>
+    <string name="edit_contact_name">Editar contato</string>
+    <string name="field_name">Nome</string>
+    <string name="field_phone">Telefone</string>
+    <string name="button_save">Salvar</string>
+    <string name="button_cancel">Cancelar</string>
+    <string name="main_activity_title">Meus contatos</string>
 </resources>

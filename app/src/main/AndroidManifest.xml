@@ -21,8 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".addContactActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".editContactActivity"
             android:exported="true"
             android:screenOrientation="portrait">
         </activity>

@@ -9,7 +9,7 @@
         android:id="@+id/meusContatos"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
-        android:text="Meus contatos"
+        android:text="@string/main_activity_title"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:layout_marginTop="20dp"

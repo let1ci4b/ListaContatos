@@ -3,14 +3,14 @@ package com.example.recyclerlistacontatos
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.example.recyclerlistacontatos.databinding.AddContactBinding
+import com.example.recyclerlistacontatos.databinding.EditContactBinding
 
-class addContactActivity : AppCompatActivity() {
-    private lateinit var binding: AddContactBinding
+class editContactActivity : AppCompatActivity() {
+    private lateinit var binding: EditContactBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = AddContactBinding.inflate(layoutInflater)
+        binding = EditContactBinding.inflate(layoutInflater)
         this.window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         supportActionBar?.hide()
         setContentView(binding.root)
