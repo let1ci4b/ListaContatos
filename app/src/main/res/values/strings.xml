@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Contatos</string>
+    <string name="app_name">"   Contatos"</string>
     <string name="add_contact_name">Novo contato</string>
     <string name="edit_contact_name">Editar contato</string>
     <string name="field_name">Nome</string>
