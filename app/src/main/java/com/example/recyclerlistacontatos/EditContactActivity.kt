@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.recyclerlistacontatos.databinding.EditContactBinding
 
-class editContactActivity : AppCompatActivity() {
+class EditContactActivity : AppCompatActivity() {
     private lateinit var binding: EditContactBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

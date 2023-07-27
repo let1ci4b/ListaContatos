@@ -1,10 +1,10 @@
 package com.example.recyclerlistacontatos
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.Window
-import android.view.WindowManager
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,11 +15,7 @@ import com.example.recyclerlistacontatos.databinding.MainLayoutBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainLayoutBinding
     private lateinit var newRecyclerView: RecyclerView
-    val contact = ArrayContacts()
-    lateinit var imageId : Array<Int>
-    lateinit var heading : Array<String>
-    lateinit var contactNumber: Array<String>
-
+    val contactsList = ArrayList<Contacts>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,21 +27,29 @@ class MainActivity : AppCompatActivity() {
         newRecyclerView = binding.recyclerView
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
-        newRecyclerView.adapter = Adapter(contact.contacts)
         onClickListeners()
     }
-
-    override fun onResume() {
-        super.onResume()
-        Toast.makeText(this@MainActivity, "${contact.contacts}", Toast.LENGTH_SHORT).show()
-    }
-
     private fun onClickListeners() {
         with(binding) {
             buttonAddContact.setOnClickListener {
-                val intent = Intent(this@MainActivity, addContactActivity::class.java)
-                startActivity(intent)
+                val intent = Intent(this@MainActivity, AddContactActivity::class.java)
+                startActivityForResult(intent, 13)
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when {
+            resultCode == Activity.RESULT_OK -> {
+                if (data != null) {
+                    val contact: Contacts = data?.getSerializableExtra("contact") as Contacts
+                    contactsList.add(contact)
+                    newRecyclerView.adapter = Adapter(contactsList)
+                }
+            }
+
+            resultCode == Activity.RESULT_CANCELED -> Toast.makeText(this@MainActivity, "Contato não salvo!", Toast.LENGTH_SHORT).show()
         }
     }
 

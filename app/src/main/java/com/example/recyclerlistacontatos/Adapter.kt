@@ -21,20 +21,20 @@ class Adapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Ada
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         with(holder.binding) {
             val currentItem = contactsList[position]
-            contactImage.setImageResource(currentItem.titleImage)
+            nameInicialImage.text = currentItem.titleImage
             contactName.text = currentItem.nameContact
             contactNumber.text = currentItem.numberContact
 
             val isVisible : Boolean = currentItem.visibility
             expandedLayout.visibility = if(isVisible) View.VISIBLE else View.GONE
 
-            contactName.setOnClickListener {
+            cardContact.setOnClickListener {
                 currentItem.visibility = !currentItem.visibility
                 notifyItemChanged(position)
             }
 
-            cardContact.setOnClickListener {
-                val intent = Intent(it.context, editContactActivity::class.java)
+            buttonEdit.setOnClickListener {
+                val intent = Intent(it.context, EditContactActivity::class.java)
                 it.context.startActivity(intent)
             }
         }

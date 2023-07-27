@@ -16,12 +16,26 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <TextView
             android:id="@+id/contactImage"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:background="@drawable/background_main_profile"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/nameInicialImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:layout_constraintRight_toRightOf="@id/contactImage"
+            app:layout_constraintLeft_toLeftOf="@id/contactImage"
+            app:layout_constraintTop_toTopOf="@id/contactImage"
+            app:layout_constraintBottom_toBottomOf="@id/contactImage"
+            tools:text="B" />
 
         <TextView
             android:id="@+id/contactName"
