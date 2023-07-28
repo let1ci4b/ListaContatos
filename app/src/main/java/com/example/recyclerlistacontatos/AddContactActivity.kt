@@ -8,13 +8,14 @@ import com.example.recyclerlistacontatos.databinding.AddContactBinding
 
 class AddContactActivity : AppCompatActivity() {
     private lateinit var binding: AddContactBinding
-    private var main = MainActivity()
+    private lateinit var contactsList: ArrayList<Contacts>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = AddContactBinding.inflate(layoutInflater)
         supportActionBar?.hide()
         setContentView(binding.root)
+        contactsList = intent.extras?.getSerializable("contact") as? ArrayList<Contacts> ?: arrayListOf()
         onClickListeners()
     }
 
@@ -30,7 +31,7 @@ class AddContactActivity : AppCompatActivity() {
 
                 //phoneExists(name, phone)
 
-                if (!invalidInputs(name, phone)) {
+                if (!invalidInputs(name, phone) && !phoneExists(name, phone)) {
                     val contact = Contacts(
                         name.get(0).toString().uppercase(),
                         name,
@@ -62,22 +63,20 @@ class AddContactActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun phoneExists(name: String, phone: String) : Boolean {
+    private fun phoneExists(name: String, phone: String) : Boolean {
 
         var exist = false
 
-        for(Contacts in main.contactsList){
+        for(Contacts in contactsList){
             if(Contacts.numberContact.equals(phone)) {
                 exist = true
                 break
             }
         }
 
-        Toast.makeText(this@AddContactActivity, main.contactsList[0].numberContact, Toast.LENGTH_SHORT).show()
-
         if (exist && !invalidInputs(name, phone)) {
             Toast.makeText(this@AddContactActivity, "Este número já esta na lista!", Toast.LENGTH_SHORT).show()
         }
         return exist
-    }*/
+    }
 }

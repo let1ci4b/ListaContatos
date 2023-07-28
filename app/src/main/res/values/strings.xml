@@ -7,4 +7,5 @@
     <string name="button_save">Salvar</string>
     <string name="button_cancel">Cancelar</string>
     <string name="main_activity_title">Meus contatos</string>
+    <string name="no_contact_warning">Você não possui contatos.\nClique aqui para adicionar!</string>
 </resources>

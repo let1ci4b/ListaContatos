@@ -25,11 +25,11 @@ class Adapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Ada
             contactName.text = currentItem.nameContact
             contactNumber.text = currentItem.numberContact
 
-            val isVisible : Boolean = currentItem.visibility
-            expandedLayout.visibility = if(isVisible) View.VISIBLE else View.GONE
+            val isVisible : Boolean? = currentItem.visibility
+            expandedLayout.visibility = if(isVisible == true) View.VISIBLE else View.GONE
 
             cardContact.setOnClickListener {
-                currentItem.visibility = !currentItem.visibility
+                currentItem.visibility = !currentItem.visibility!!
                 notifyItemChanged(position)
             }
 
