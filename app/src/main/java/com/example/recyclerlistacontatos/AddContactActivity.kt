@@ -15,7 +15,7 @@ class AddContactActivity : AppCompatActivity() {
         binding = AddContactBinding.inflate(layoutInflater)
         supportActionBar?.hide()
         setContentView(binding.root)
-        contactsList = intent.extras?.getSerializable("contact") as? ArrayList<Contacts> ?: arrayListOf()
+        contactsList = intent.extras?.getSerializable("lista") as? ArrayList<Contacts> ?: arrayListOf()
         onClickListeners()
     }
 
@@ -29,18 +29,11 @@ class AddContactActivity : AppCompatActivity() {
                 val name = fieldContactName.text.toString()
                 val phone = fieldContactPhone.text.toString()
 
-                //phoneExists(name, phone)
+                phoneExists(name, phone)
 
                 if (!invalidInputs(name, phone) && !phoneExists(name, phone)) {
                     val contact = Contacts(
-                        name.get(0).toString().uppercase(),
-                        name,
-                        "(" + phone.substring(0, 2) + ")" + phone.substring(
-                            2,
-                            7
-                        ) + "-" + phone.substring(7, 11),
-                        false
-                    )
+                        name.get(0).toString().uppercase(), name, phone, false)
 
                     val returnIntent: Intent = Intent()
                     returnIntent.putExtra("contact", contact)
@@ -67,16 +60,16 @@ class AddContactActivity : AppCompatActivity() {
 
         var exist = false
 
-        for(Contacts in contactsList){
-            if(Contacts.numberContact.equals(phone)) {
+        contactsList.forEach {
+            if(it.numberContact.equals(phone)) {
                 exist = true
-                break
             }
         }
 
         if (exist && !invalidInputs(name, phone)) {
-            Toast.makeText(this@AddContactActivity, "Este número já esta na lista!", Toast.LENGTH_SHORT).show()
+           Toast.makeText(this@AddContactActivity, "Este número já esta na lista!", Toast.LENGTH_SHORT).show()
         }
+
         return exist
     }
 }

@@ -23,7 +23,7 @@ class Adapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Ada
             val currentItem = contactsList[position]
             nameInicialImage.text = currentItem.titleImage
             contactName.text = currentItem.nameContact
-            contactNumber.text = currentItem.numberContact
+            contactNumber.text = "(" + currentItem.numberContact.substring(0, 2) + ")" + currentItem.numberContact.substring(2, 7) + "-" + currentItem.numberContact.substring(7, 11)
 
             val isVisible : Boolean? = currentItem.visibility
             expandedLayout.visibility = if(isVisible == true) View.VISIBLE else View.GONE
@@ -35,6 +35,8 @@ class Adapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Ada
 
             buttonEdit.setOnClickListener {
                 val intent = Intent(it.context, EditContactActivity::class.java)
+                intent.putExtra("list", contactsList)
+                intent.putExtra("contact", position)
                 it.context.startActivity(intent)
             }
         }
