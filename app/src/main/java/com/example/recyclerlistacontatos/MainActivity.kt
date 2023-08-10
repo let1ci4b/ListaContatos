@@ -9,8 +9,6 @@ import android.view.Window
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isEmpty
-import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.databinding.MainLayoutBinding
@@ -53,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             buttonAddContact.setOnClickListener {
                 val intent = Intent(this@MainActivity, AddContactActivity::class.java)
                 intent.putExtra("lista", contactsList)
-                startActivityForResult(intent, 13)
+                startActivityForResult(intent, 1)
             }
         }
     }
@@ -61,18 +59,44 @@ class MainActivity : AppCompatActivity() {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when {
-            resultCode == Activity.RESULT_OK -> {
-                if (data != null) {
-                    val contact: Contacts = data.getSerializableExtra("contact") as Contacts
-                    contactsList.add(contact)
-                    newRecyclerView.adapter = Adapter(contactsList)
-                    showNoContactsWarning()
+        if (requestCode == 1) {
+            when {
+                resultCode == Activity.RESULT_OK -> {
+                    if (data != null) {
+                        val contact: Contacts = data.getSerializableExtra("contact") as Contacts
+                        contactsList.add(contact)
+                        printTextOnScreen("${contact.nameContact} foi adicionado(a) com sucesso!")
+                        newRecyclerView.adapter = Adapter(contactsList)
+                        showNoContactsWarning()
+                    }
                 }
-            }
 
-            resultCode == Activity.RESULT_CANCELED -> Toast.makeText(this@MainActivity, "Contato não salvo!", Toast.LENGTH_SHORT).show()
+                resultCode == Activity.RESULT_CANCELED ->printTextOnScreen("Contato não salvo!")
+            }
         }
+
+        if (requestCode == 2) {
+            when {
+                resultCode == Activity.RESULT_OK -> {
+                    if (data != null) {
+                        val contact: Contacts = data.getSerializableExtra("updatedContact") as Contacts
+                        val position = intent.extras?.getInt("contactPosition")
+
+                        position?.let {
+                            contactsList.set(it, contact)
+                            printTextOnScreen("Alterações salvas!") } ?: printTextOnScreen("Erro ao editar contato.")
+
+                        newRecyclerView.adapter = Adapter(contactsList)
+                    }
+                }
+
+                resultCode == Activity.RESULT_CANCELED -> printTextOnScreen("Alterações descartadas.")
+            }
+        }
+    }
+
+    private fun printTextOnScreen(warning: String){
+        Toast.makeText(this@MainActivity, warning, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

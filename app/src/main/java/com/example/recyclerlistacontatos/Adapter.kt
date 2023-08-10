@@ -37,7 +37,8 @@ class Adapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Ada
                 val intent = Intent(it.context, EditContactActivity::class.java)
                 intent.putExtra("list", contactsList)
                 intent.putExtra("contact", position)
-                it.context.startActivity(intent)
+                (it.context as MainActivity).startActivityForResult(intent, 2)
+
             }
         }
     }

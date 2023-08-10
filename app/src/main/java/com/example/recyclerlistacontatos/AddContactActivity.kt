@@ -26,20 +26,26 @@ class AddContactActivity : AppCompatActivity() {
                 finish()
             }
             buttonSave.setOnClickListener {
-                val name = fieldContactName.text.toString()
-                val phone = fieldContactPhone.text.toString()
+                saveNewContact()
+            }
+        }
+    }
 
-                phoneExists(name, phone)
+    private fun saveNewContact() {
+        with(binding) {
+            val name = fieldContactName.text.toString()
+            val phone = fieldContactPhone.text.toString()
 
-                if (!invalidInputs(name, phone) && !phoneExists(name, phone)) {
-                    val contact = Contacts(
-                        name.get(0).toString().uppercase(), name, phone, false)
+            phoneExists(name, phone)
 
-                    val returnIntent: Intent = Intent()
-                    returnIntent.putExtra("contact", contact)
-                    setResult(RESULT_OK, returnIntent)
-                    finish()
-                }
+            if (!invalidInputs(name, phone) && !phoneExists(name, phone)) {
+                val contact = Contacts(
+                    name.get(0).toString().uppercase(), name, phone, false)
+
+                val returnIntent: Intent = Intent()
+                returnIntent.putExtra("contact", contact)
+                setResult(RESULT_OK, returnIntent)
+                finish()
             }
         }
     }
