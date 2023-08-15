@@ -11,7 +11,7 @@ import com.example.recyclerlistacontatos.models.Contacts
 import com.example.recyclerlistacontatos.editcontacts.EditContactActivity
 import com.example.recyclerlistacontatos.databinding.ContactCardBinding
 
-class Adapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Adapter<Adapter.MyViewHolder>() {
+class RecyclerViewAdapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
 
     class  MyViewHolder(val binding: ContactCardBinding) : RecyclerView.ViewHolder(binding.root)
 

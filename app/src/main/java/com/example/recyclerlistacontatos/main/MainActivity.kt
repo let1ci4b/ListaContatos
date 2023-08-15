@@ -18,18 +18,28 @@ import com.example.recyclerlistacontatos.models.ContactList
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainLayoutBinding
     private lateinit var newRecyclerView: RecyclerView
+    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = MainLayoutBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Todo Change programmatically toolbar
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setIcon(R.drawable.ic_main)
-        binding = MainLayoutBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+        setupRecyclerView()
+        setupListeners()
+        showNoContactsWarning()
+    }
+
+    private fun setupRecyclerView() {
         newRecyclerView = binding.recyclerView
         newRecyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerViewAdapter = RecyclerViewAdapter(ContactList.getList())
+        newRecyclerView.adapter = recyclerViewAdapter
         newRecyclerView.setHasFixedSize(true)
-        onClickListeners()
-        showNoContactsWarning()
     }
 
     private fun showNoContactsWarning() {
@@ -47,10 +57,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         showNoContactsWarning()
-        newRecyclerView.adapter = Adapter(ContactList.getList())
+        /// Todo Add submit list to reload recycler
+//        recyclerViewAdapter.notifyDataSetChanged()
     }
 
-    private fun onClickListeners() {
+    private fun setupListeners() {
         with(binding) {
             buttonAddContact.setOnClickListener {
                 val intent = Intent(this@MainActivity, AddContactActivity::class.java)
