@@ -1,10 +1,14 @@
-package com.example.recyclerlistacontatos
+package com.example.recyclerlistacontatos.main
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recyclerlistacontatos.models.Contacts
+import com.example.recyclerlistacontatos.editcontacts.EditContactActivity
 import com.example.recyclerlistacontatos.databinding.ContactCardBinding
 
 class Adapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Adapter<Adapter.MyViewHolder>() {
@@ -25,19 +29,19 @@ class Adapter(private val contactsList : ArrayList<Contacts>) : RecyclerView.Ada
             contactName.text = currentItem.nameContact
             contactNumber.text = "(" + currentItem.numberContact.substring(0, 2) + ")" + currentItem.numberContact.substring(2, 7) + "-" + currentItem.numberContact.substring(7, 11)
 
-            val isVisible : Boolean? = currentItem.visibility
+            val isVisible : Boolean? = currentItem.isExpanded
             expandedLayout.visibility = if(isVisible == true) View.VISIBLE else View.GONE
 
             cardContact.setOnClickListener {
-                currentItem.visibility = !currentItem.visibility!!
+                currentItem.isExpanded = !currentItem.isExpanded!!
                 notifyItemChanged(position)
             }
 
             buttonEdit.setOnClickListener {
                 val intent = Intent(it.context, EditContactActivity::class.java)
-                intent.putExtra("list", contactsList)
                 intent.putExtra("contact", position)
-                (it.context as MainActivity).startActivityForResult(intent, 2)
+
+                startActivityForResult(it.context as Activity, intent, 2, null)
 
             }
         }
