@@ -36,9 +36,10 @@ class EditContactActivity : AppCompatActivity() {
                 updateContactInformation()
             }
 
+            /// todo validate inputs content
 //            fieldContactName.doOnTextChanged { text, start, before, count ->
-//                val teste = text?.matches(Regex("[0-9]*"))
-//                buttonSave.isEnabled = teste == true
+//                val invalidText = text?.matches(Regex("[0-9]*"))
+//                buttonSave.isEnabled = invalidText == false
 //            }
 
         }

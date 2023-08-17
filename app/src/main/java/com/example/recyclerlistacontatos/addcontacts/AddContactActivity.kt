@@ -22,7 +22,6 @@ class AddContactActivity : AppCompatActivity() {
     private fun onClickListeners() {
         with(binding) {
            buttonCancel.setOnClickListener {
-                setResult(RESULT_CANCELED)
                 finish()
             }
             buttonSave.setOnClickListener {
@@ -44,7 +43,6 @@ class AddContactActivity : AppCompatActivity() {
         }
     }
     private fun invalidInputs(name: String, phone: String) : Boolean {
-
         return if((name.isEmpty() || phone.isEmpty() || !phone.matches(Regex("[0-9]*")) || name.matches(Regex("[0-9]*")))) {
             Toast.makeText(this@AddContactActivity, "Preencha os campos corretamente!", Toast.LENGTH_SHORT).show()
             true
@@ -55,23 +53,4 @@ class AddContactActivity : AppCompatActivity() {
             false
         }
     }
-
-
-
-//    private fun phoneExists(name: String, phone: String) : Boolean {
-//
-//        var exist = false
-//
-//        contactsList.forEach {
-//            if(it.numberContact.equals(phone)) {
-//                exist = true
-//            }
-//        }
-//
-//        if (exist && !invalidInputs(name, phone)) {
-//           Toast.makeText(this@AddContactActivity, "Este número já esta na lista!", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        return exist
-//    }
 }

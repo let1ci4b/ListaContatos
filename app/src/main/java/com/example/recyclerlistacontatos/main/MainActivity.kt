@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Todo Change programmatically toolbar
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        //requestWindowFeature(Window.FEATURE_NO_TITLE)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setIcon(R.drawable.ic_main)
 
@@ -36,14 +36,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         newRecyclerView = binding.recyclerView
-        newRecyclerView.layoutManager = LinearLayoutManager(this)
         recyclerViewAdapter = RecyclerViewAdapter(ContactList.getList())
-        newRecyclerView.adapter = recyclerViewAdapter
-        newRecyclerView.setHasFixedSize(true)
+
+        newRecyclerView.apply {
+            adapter = recyclerViewAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+        }
     }
 
     private fun showNoContactsWarning() {
-        with(binding){
+        with(binding) {
             if (ContactList.listSize() == 0) {
                 iconNoContactWarning.visibility = View.VISIBLE
                 noContactsWarning.visibility = View.VISIBLE
@@ -58,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         showNoContactsWarning()
         /// Todo Add submit list to reload recycler
-//        recyclerViewAdapter.notifyDataSetChanged()
+        recyclerViewAdapter.notifyDataSetChanged()
     }
 
     private fun setupListeners() {
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun printTextOnScreen(warning: String){
+    private fun printTextOnScreen(warning: String) {
         Toast.makeText(this@MainActivity, warning, Toast.LENGTH_SHORT).show()
     }
 
