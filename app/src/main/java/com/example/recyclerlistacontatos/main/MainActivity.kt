@@ -1,5 +1,6 @@
 package com.example.recyclerlistacontatos.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -17,7 +18,6 @@ import com.example.recyclerlistacontatos.models.ContactList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: MainLayoutBinding
-    private lateinit var newRecyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +35,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        newRecyclerView = binding.recyclerView
-        recyclerViewAdapter = RecyclerViewAdapter(ContactList.getList())
+        recyclerViewAdapter = RecyclerViewAdapter(ContactList.getList(), binding.recyclerView)
 
-        newRecyclerView.apply {
+        binding.recyclerView.apply {
+            setHasFixedSize(false)
             adapter = recyclerViewAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
         }
     }
 
@@ -56,10 +56,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
         showNoContactsWarning()
-        /// Todo Add submit list to reload recycler
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
@@ -72,10 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun printTextOnScreen(warning: String) {
-        Toast.makeText(this@MainActivity, warning, Toast.LENGTH_SHORT).show()
-    }
-
+    // todo implement search bar using AutoCompletTextView
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
 

@@ -9,29 +9,47 @@ import com.example.recyclerlistacontatos.models.Contacts
 
 class RecyclerViewViewHolder(private var binding: ContactCardBinding) : RecyclerView.ViewHolder(binding.root) {
     
-    fun bind(contact: Contacts) {
+    fun bind(contact: Contacts, isExpanded: Boolean, expandableCallback: () -> Unit) {
         with(binding) {
             nameInicialImage.text = contact.titleImage
             contactName.text = contact.nameContact
             contactNumber.text = "(" + contact.numberContact.substring(0, 2) + ")" + contact.numberContact.substring(2, 7) + "-" + contact.numberContact.substring(7, 11)
+        }
 
-            val isVisible : Boolean = contact.isExpanded
-            expandedLayout.visibility = if(true) View.VISIBLE else View.GONE
+        setupView(isExpanded, expandableCallback)
+    }
 
-            cardContact.setOnClickListener {
-                contact.isExpanded = !contact.isExpanded
+    private fun setupView(isExpanded: Boolean, expandableCallback: (() -> Unit)?) {
+        with(binding) {
+            if (isExpanded) {
+                expandedLayout.visibility = View.VISIBLE
+
+                buttonEdit.setOnClickListener {
+                    val intent = Intent(it.context, EditContactActivity::class.java)
+                    intent.putExtra("contact", position)
+                    it.context.startActivity(intent)
+                }
+
+                buttonMessage.setOnClickListener {
+
+                }
+
+                buttonCall.setOnClickListener {
+
+                }
+
+            } else {
+                expandedLayout.visibility = View.GONE
             }
 
-            buttonEdit.setOnClickListener {
-                val intent = Intent(it.context, EditContactActivity::class.java)
-                intent.putExtra("contact", position)
-
-                it.context.startActivity(intent)
-
+            unfoldLayout.setOnClickListener {
+                expandableCallback?.invoke()
             }
         }
     }
 
-
+    fun unfoldContact() {
+        setupView(false, null)
+    }
 
 }

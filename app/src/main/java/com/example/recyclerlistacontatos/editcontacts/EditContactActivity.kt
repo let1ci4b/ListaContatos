@@ -36,7 +36,7 @@ class EditContactActivity : AppCompatActivity() {
                 updateContactInformation()
             }
 
-            /// todo validate inputs content
+            /// todo validate inputs content with editText
 //            fieldContactName.doOnTextChanged { text, start, before, count ->
 //                val invalidText = text?.matches(Regex("[0-9]*"))
 //                buttonSave.isEnabled = invalidText == false
@@ -61,9 +61,9 @@ class EditContactActivity : AppCompatActivity() {
             val shouldAddPhone = !ContactList.phoneExist(phone, position)
 
             if (isValidInput && shouldAddPhone) {
-                val contact = Contacts(name[0].toString().uppercase(), name, phone, false)
-
+                val contact = Contacts(name[0].toString().uppercase(), name, phone)
                 ContactList.editContact(contact, position)
+                printTextOnScreen("$name foi editado(a) com sucesso!")
                 finish()
             }
         }
@@ -71,13 +71,17 @@ class EditContactActivity : AppCompatActivity() {
 
     private fun invalidInputs(name: String, phone: String) : Boolean {
         return if((name.isEmpty() || phone.isEmpty() || !phone.matches(Regex("[0-9]*")) || name.matches(Regex("[0-9]*")))) {
-            Toast.makeText(this@EditContactActivity, "Preencha os campos corretamente, animal!", Toast.LENGTH_SHORT).show()
+            printTextOnScreen("Preencha os campos corretamente!")
             true
         } else if(phone.length != 11) {
-            Toast.makeText(this@EditContactActivity, "Telefone deve conter 11 digitos!", Toast.LENGTH_SHORT).show()
+            printTextOnScreen("Telefone deve conter 11 digitos!")
             true
         } else {
             false
         }
+    }
+
+    private fun printTextOnScreen(warning: String) {
+        Toast.makeText(this@EditContactActivity, warning, Toast.LENGTH_SHORT).show()
     }
 }

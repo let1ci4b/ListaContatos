@@ -16,6 +16,15 @@
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/unfoldLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/expandedLayout" >
+
         <TextView
             android:id="@+id/contactImage"
             android:layout_width="35dp"
@@ -37,22 +46,22 @@
             app:layout_constraintBottom_toBottomOf="@id/contactImage"
             tools:text="B" />
 
-        <TextView
-            android:id="@+id/contactName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:layout_marginTop="4dp"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/contactImage"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="CONTATO" />
+            <TextView
+                android:id="@+id/contactName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/contactImage"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="CONTATO" />
 
-        <View
+            <View
             android:layout_width="0dp"
             android:layout_height="0.5dp"
             android:layout_marginTop="5dp"
@@ -62,16 +71,19 @@
             app:layout_constraintStart_toEndOf="@+id/contactImage"
             app:layout_constraintTop_toBottomOf="@+id/contactName" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/expandedLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            android:layout_marginStart="48dp"
             android:layout_marginEnd="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/cardContact"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/contactName"
-            app:layout_constraintTop_toBottomOf="@+id/contactImage"
+            app:layout_constraintStart_toStartOf="@+id/unfoldLayout"
+            app:layout_constraintTop_toBottomOf="@+id/unfoldLayout"
             app:layout_constrainedWidth="true" >
 
             <TextView
