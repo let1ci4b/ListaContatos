@@ -3,6 +3,7 @@ package com.example.recyclerlistacontatos.editcontacts
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import com.example.recyclerlistacontatos.databinding.EditContactBinding
 import com.example.recyclerlistacontatos.models.ContactList
@@ -33,15 +34,31 @@ class EditContactActivity : AppCompatActivity() {
             }
 
             buttonSave.setOnClickListener {
+                validateNewContact()
                 updateContactInformation()
             }
 
-            /// todo validate inputs content with editText
-//            fieldContactName.doOnTextChanged { text, start, before, count ->
-//                val invalidText = text?.matches(Regex("[0-9]*"))
-//                buttonSave.isEnabled = invalidText == false
-//            }
+            fieldContactName.doOnTextChanged { text, start, before, count ->
+                validateNewContact()
+            }
 
+            fieldContactPhone.doOnTextChanged { text, start, before, count ->
+                validateNewContact()
+            }
+        }
+    }
+
+    private fun validateNewContact() {
+        with(binding) {
+            buttonSave.isEnabled = false
+            /// todo verify fieldContactPhone error
+            when {
+                fieldContactName.text.isEmpty() -> fieldContactName.setError("Insira um nome.")
+                fieldContactName.text.isDigitsOnly() -> fieldContactName.setError("Esse campo não pode conter apenas números.")
+                !fieldContactPhone.text.isDigitsOnly() -> fieldContactPhone.setError("Insira apenas números.")
+                fieldContactPhone.text.length != 11 -> fieldContactPhone.setError("Telefone deve conter 11 dígitos.")
+                else ->  buttonSave.isEnabled = true
+            }
         }
     }
     private fun setupFields() {
@@ -57,27 +74,14 @@ class EditContactActivity : AppCompatActivity() {
             val name = fieldContactName.text.toString()
             val phone = fieldContactPhone.text.toString()
 
-            val isValidInput = !invalidInputs(name, phone)
             val shouldAddPhone = !ContactList.phoneExist(phone, position)
 
-            if (isValidInput && shouldAddPhone) {
+            if (shouldAddPhone) {
                 val contact = Contacts(name[0].toString().uppercase(), name, phone)
                 ContactList.editContact(contact, position)
                 printTextOnScreen("$name foi editado(a) com sucesso!")
                 finish()
-            }
-        }
-    }
-
-    private fun invalidInputs(name: String, phone: String) : Boolean {
-        return if((name.isEmpty() || phone.isEmpty() || !phone.matches(Regex("[0-9]*")) || name.matches(Regex("[0-9]*")))) {
-            printTextOnScreen("Preencha os campos corretamente!")
-            true
-        } else if(phone.length != 11) {
-            printTextOnScreen("Telefone deve conter 11 digitos!")
-            true
-        } else {
-            false
+            } else printTextOnScreen("Esse número já está na lista.")
         }
     }
 
