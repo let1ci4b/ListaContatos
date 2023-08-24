@@ -9,3 +9,5 @@ Lista de contatos mobile, desenvolvida na linguagem Kotlin, utilizando RecyclerV
 [package addcontacts](app/src/main/java/com/example/recyclerlistacontatos/addcontacts)
 
 [package models](app/src/main/java/com/example/recyclerlistacontatos/models)
+
+[res - package layout](app/src/main/res/layout)
