@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
+import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.AddContactBinding
 import com.example.recyclerlistacontatos.models.ContactList
 import com.example.recyclerlistacontatos.models.Contacts
@@ -17,6 +18,9 @@ class AddContactActivity : AppCompatActivity() {
         binding = AddContactBinding.inflate(layoutInflater)
         supportActionBar?.hide()
         setContentView(binding.root)
+        /// todo implement actionBar with binding
+        setSupportActionBar(findViewById(R.id.mainToolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setupListeners()
     }
 

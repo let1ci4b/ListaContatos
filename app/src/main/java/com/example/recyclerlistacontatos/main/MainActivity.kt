@@ -5,18 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import android.view.Window
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.addcontacts.AddContactActivity
 import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.MainLayoutBinding
 import com.example.recyclerlistacontatos.models.ContactList
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,10 +22,12 @@ class MainActivity : AppCompatActivity() {
         binding = MainLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Todo Change programmatically toolbar
-        //requestWindowFeature(Window.FEATURE_NO_TITLE)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setIcon(R.drawable.ic_main)
+        /// todo implement actionBar with binding
+        /// todo fix toolbar themes
+        setSupportActionBar(findViewById(R.id.mainToolbar))
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+//        supportActionBar?.setDisplayShowHomeEnabled(true)
+//        supportActionBar?.setIcon(R.drawable.ic_main)
 
         setupRecyclerView()
         setupListeners()
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        recyclerViewAdapter = RecyclerViewAdapter(ContactList.getList(), binding.recyclerView)
+        recyclerViewAdapter = RecyclerViewAdapter(ContactList.getList(), binding.recyclerView, this)
 
         binding.recyclerView.apply {
             setHasFixedSize(false)
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
         }
     }
+
 
     private fun showNoContactsWarning() {
         with(binding) {
@@ -97,5 +98,13 @@ class MainActivity : AppCompatActivity() {
             }
         })*/
         return true
+    }
+
+    override fun onClick(position: Int) {
+        Toast.makeText(this, "onClick $position", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onLongClick(position: Int) {
+        Toast.makeText(this, "onLongClick $position", Toast.LENGTH_LONG).show()
     }
 }

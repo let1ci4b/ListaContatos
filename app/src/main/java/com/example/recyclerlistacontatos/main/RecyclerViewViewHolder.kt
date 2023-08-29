@@ -7,8 +7,18 @@ import com.example.recyclerlistacontatos.databinding.ContactCardBinding
 import com.example.recyclerlistacontatos.editcontacts.EditContactActivity
 import com.example.recyclerlistacontatos.models.Contacts
 
-class RecyclerViewViewHolder(private var binding: ContactCardBinding) : RecyclerView.ViewHolder(binding.root) {
-    
+class RecyclerViewViewHolder(private var binding: ContactCardBinding, onItemClickListener: RecyclerViewAdapter.OnItemClickListener) : RecyclerView.ViewHolder(binding.root) {
+
+    init {
+        itemView.setOnClickListener {
+            onItemClickListener.onClick(adapterPosition)
+        }
+
+        binding.unfoldLayout.setOnLongClickListener {
+            onItemClickListener.onLongClick(adapterPosition)
+            return@setOnLongClickListener true
+        }
+    }
     fun bind(contact: Contacts, isExpanded: Boolean, expandableCallback: () -> Unit) {
         with(binding) {
             nameInicialImage.text = contact.titleImage

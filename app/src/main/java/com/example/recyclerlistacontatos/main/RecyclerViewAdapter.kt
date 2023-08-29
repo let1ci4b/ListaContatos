@@ -2,6 +2,7 @@ package com.example.recyclerlistacontatos.main
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -10,13 +11,14 @@ import com.example.recyclerlistacontatos.models.Contacts
 
 class RecyclerViewAdapter(
     private val contactsList : ArrayList<Contacts>,
-    private val recyclerView: RecyclerView
+    private val recyclerView: RecyclerView,
+    private val onItemClickListener: OnItemClickListener
     ) : RecyclerView.Adapter<RecyclerViewViewHolder>() {
 
     private var expandadedPosition : Int? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewViewHolder {
         val binding = ContactCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return RecyclerViewViewHolder(binding)
+        return RecyclerViewViewHolder(binding, onItemClickListener)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -41,5 +43,11 @@ class RecyclerViewAdapter(
 
     override fun getItemCount(): Int = contactsList.size
 
+    /// todo implements swipe gesture
+    interface OnItemClickListener {
+        fun onClick(position: Int)
+        fun onLongClick(position: Int)
+        fun onGestureListener(position: Int)
+    }
 
 }
