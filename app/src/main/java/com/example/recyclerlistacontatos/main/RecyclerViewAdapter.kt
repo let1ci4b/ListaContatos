@@ -47,7 +47,6 @@ class RecyclerViewAdapter(
     interface OnItemClickListener {
         fun onClick(position: Int)
         fun onLongClick(position: Int)
-        fun onGestureListener(position: Int)
     }
 
 }

@@ -36,6 +36,7 @@ class AddContactActivity : AppCompatActivity() {
                 if(buttonSave.isEnabled) saveNewContact() else printTextOnScreen("Preencha os campos corretamente.")
             }
 
+            /// todo refactor editText validation (use .onFocusChangeListener)
             fieldContactName.doOnTextChanged { text, start, before, count ->
                 validateNewContact()
             }
@@ -44,7 +45,6 @@ class AddContactActivity : AppCompatActivity() {
                 validateNewContact()
             }
 
-            //fieldContactPhone.onFocusChangeListener
         }
     }
 

@@ -1,14 +1,18 @@
 package com.example.recyclerlistacontatos.main
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.addcontacts.AddContactActivity
 import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.MainLayoutBinding
@@ -42,9 +46,61 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
             adapter = recyclerViewAdapter
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
         }
+        setupTouchOnSwiped()
     }
 
+    private fun setupTouchOnSwiped() {
+        val simpleCallback = object :
+            ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false
 
+            /// todo add background on swipe
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+
+                // If you want to add a background, a text, an icon
+                //  as the user swipes, this is where to start decorating
+                //  I will link you to a library I created for that below
+
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                when (direction) {
+                    ItemTouchHelper.LEFT -> {
+                        Toast.makeText(this@MainActivity, "swipe left $position", Toast.LENGTH_LONG).show()
+                    }
+                    ItemTouchHelper.RIGHT -> {
+                        Toast.makeText(this@MainActivity, "swipe right $position", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+        ItemTouchHelper(simpleCallback).attachToRecyclerView(binding.recyclerView)
+    }
     private fun showNoContactsWarning() {
         with(binding) {
             if (ContactList.listSize() == 0) {
@@ -104,6 +160,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         Toast.makeText(this, "onClick $position", Toast.LENGTH_LONG).show()
     }
 
+    /// todo add snackbar for undo remove option
     override fun onLongClick(position: Int) {
         Toast.makeText(this, "onLongClick $position", Toast.LENGTH_LONG).show()
     }
