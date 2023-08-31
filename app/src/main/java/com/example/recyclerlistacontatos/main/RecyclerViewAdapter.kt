@@ -47,6 +47,8 @@ class RecyclerViewAdapter(
     interface OnItemClickListener {
         fun onClick(position: Int)
         fun onLongClick(position: Int)
+
+        fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
     }
 
 }

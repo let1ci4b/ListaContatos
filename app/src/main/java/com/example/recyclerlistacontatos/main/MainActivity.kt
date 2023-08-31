@@ -1,7 +1,7 @@
 package com.example.recyclerlistacontatos.main
 
+import android.R
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.os.Bundle
@@ -10,13 +10,15 @@ import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.addcontacts.AddContactActivity
-import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.MainLayoutBinding
 import com.example.recyclerlistacontatos.models.ContactList
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener {
     private lateinit var binding: MainLayoutBinding
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
 
         /// todo implement actionBar with binding
         /// todo fix toolbar themes
-        setSupportActionBar(findViewById(R.id.mainToolbar))
+        setSupportActionBar(findViewById(com.example.recyclerlistacontatos.R.id.mainToolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 //        supportActionBar?.setDisplayShowHomeEnabled(true)
 //        supportActionBar?.setIcon(R.drawable.ic_main)
@@ -50,18 +52,14 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     }
 
     private fun setupTouchOnSwiped() {
-        val simpleCallback = object :
-            ItemTouchHelper.SimpleCallback(
-                0,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-            ) {
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean = false
 
-            /// todo add background on swipe
+            /// todo adjust cardview border on swipe
             override fun onChildDraw(
                 c: Canvas,
                 recyclerView: RecyclerView,
@@ -72,9 +70,26 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
                 isCurrentlyActive: Boolean
             ) {
 
-                // If you want to add a background, a text, an icon
-                //  as the user swipes, this is where to start decorating
-                //  I will link you to a library I created for that below
+                RecyclerViewSwipeDecorator.Builder(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+                    .addSwipeRightBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.message_background))
+                    .addSwipeRightActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_message)
+                    .setSwipeRightActionIconTint(com.example.recyclerlistacontatos.R.color.white)
+                    .addSwipeRightLabel("Mensagem")
+                    .addCornerRadius(1,32)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.call_background))
+                    .addSwipeLeftActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_call)
+                    .setSwipeLeftActionIconTint(com.example.recyclerlistacontatos.R.color.white)
+                    .addSwipeLeftLabel("Chamar")
+                    .create()
+                    .decorate()
 
                 super.onChildDraw(
                     c,
@@ -101,6 +116,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         }
         ItemTouchHelper(simpleCallback).attachToRecyclerView(binding.recyclerView)
     }
+
     private fun showNoContactsWarning() {
         with(binding) {
             if (ContactList.listSize() == 0) {
@@ -131,10 +147,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
 
     // todo implement search bar using AutoCompletTextView
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
+        menuInflater.inflate(com.example.recyclerlistacontatos.R.menu.main_menu, menu)
 
         //val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchItem = menu?.findItem(R.id.actionSearch)
+        val searchItem = menu?.findItem(com.example.recyclerlistacontatos.R.id.actionSearch)
         val searchView = searchItem?.actionView as SearchView
         //searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
         searchView.queryHint = "Pesquisar"
@@ -163,5 +179,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     /// todo add snackbar for undo remove option
     override fun onLongClick(position: Int) {
         Toast.makeText(this, "onLongClick $position", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        TODO("Not yet implemented")
     }
 }

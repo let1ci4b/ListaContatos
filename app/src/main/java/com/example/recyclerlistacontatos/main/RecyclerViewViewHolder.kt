@@ -18,6 +18,7 @@ class RecyclerViewViewHolder(private var binding: ContactCardBinding, onItemClic
             onItemClickListener.onLongClick(adapterPosition)
             return@setOnLongClickListener true
         }
+
     }
     fun bind(contact: Contacts, isExpanded: Boolean, expandableCallback: () -> Unit) {
         with(binding) {
