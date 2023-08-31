@@ -7,9 +7,19 @@ import com.example.recyclerlistacontatos.databinding.ContactCardBinding
 import com.example.recyclerlistacontatos.editcontacts.EditContactActivity
 import com.example.recyclerlistacontatos.models.Contacts
 
-class RecyclerViewViewHolder(private var binding: ContactCardBinding, onItemClickListener: RecyclerViewAdapter.OnItemClickListener) : RecyclerView.ViewHolder(binding.root) {
+class RecyclerViewViewHolder(private var binding: ContactCardBinding, private val onItemClickListener: RecyclerViewAdapter.OnItemClickListener) : RecyclerView.ViewHolder(binding.root) {
 
-    init {
+    fun bind(contact: Contacts, isExpanded: Boolean, expandableCallback: () -> Unit) {
+        with(binding) {
+            nameInicialImage.text = contact.titleImage
+            contactName.text = contact.nameContact
+            contactNumber.text = "(" + contact.numberContact.substring(0, 2) + ")" + contact.numberContact.substring(2, 7) + "-" + contact.numberContact.substring(7, 11)
+        }
+        setupListeners()
+        setupView(isExpanded, expandableCallback)
+    }
+
+    private fun setupListeners(){
         itemView.setOnClickListener {
             onItemClickListener.onClick(adapterPosition)
         }
@@ -18,16 +28,6 @@ class RecyclerViewViewHolder(private var binding: ContactCardBinding, onItemClic
             onItemClickListener.onLongClick(adapterPosition)
             return@setOnLongClickListener true
         }
-
-    }
-    fun bind(contact: Contacts, isExpanded: Boolean, expandableCallback: () -> Unit) {
-        with(binding) {
-            nameInicialImage.text = contact.titleImage
-            contactName.text = contact.nameContact
-            contactNumber.text = "(" + contact.numberContact.substring(0, 2) + ")" + contact.numberContact.substring(2, 7) + "-" + contact.numberContact.substring(7, 11)
-        }
-
-        setupView(isExpanded, expandableCallback)
     }
 
     private fun setupView(isExpanded: Boolean, expandableCallback: (() -> Unit)?) {
