@@ -151,6 +151,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
             makePhoneCall()
         }
     }
+
     /// todo fix onRequestPermissionsResult code
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -228,7 +229,4 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         Toast.makeText(this, "onLongClick $position", Toast.LENGTH_LONG).show()
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        TODO("Not yet implemented")
-    }
 }

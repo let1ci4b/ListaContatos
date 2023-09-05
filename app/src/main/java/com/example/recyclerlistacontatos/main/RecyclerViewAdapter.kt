@@ -48,7 +48,6 @@ class RecyclerViewAdapter(
         fun onClick(position: Int)
         fun onLongClick(position: Int)
 
-        fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
     }
 
 }
