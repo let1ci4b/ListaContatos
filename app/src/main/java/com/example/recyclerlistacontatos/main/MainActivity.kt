@@ -1,15 +1,17 @@
 package com.example.recyclerlistacontatos.main
 
-import android.R
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Canvas
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,9 +22,13 @@ import com.example.recyclerlistacontatos.models.ContactList
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    private var itemViewPosition: Int = 0
+    var REQUEST_PHONE_CALL = 1
+    var REQUEST_SEND_SMS = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainLayoutBinding.inflate(layoutInflater)
@@ -81,13 +87,13 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
                 )
                     .addSwipeRightBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.message_background))
                     .addSwipeRightActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_message)
-                    .setSwipeRightActionIconTint(com.example.recyclerlistacontatos.R.color.white)
                     .addSwipeRightLabel("Mensagem")
+                    .setSwipeRightLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.white))
                     .addCornerRadius(1,32)
                     .addSwipeLeftBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.call_background))
                     .addSwipeLeftActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_call)
-                    .setSwipeLeftActionIconTint(com.example.recyclerlistacontatos.R.color.white)
                     .addSwipeLeftLabel("Chamar")
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.white))
                     .create()
                     .decorate()
 
@@ -106,15 +112,56 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
                 val position = viewHolder.adapterPosition
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        Toast.makeText(this@MainActivity, "swipe left $position", Toast.LENGTH_LONG).show()
+                        itemViewPosition = position
+                        checkPhonePermissionAndMakeCall()
                     }
                     ItemTouchHelper.RIGHT -> {
-                        Toast.makeText(this@MainActivity, "swipe right $position", Toast.LENGTH_LONG).show()
+                        itemViewPosition = position
+                        checkPhonePermissionAndSendSMS()
                     }
                 }
             }
         }
         ItemTouchHelper(simpleCallback).attachToRecyclerView(binding.recyclerView)
+    }
+
+    private fun sendSms() {
+        val phoneIntent = Intent(Intent.ACTION_SENDTO)
+        phoneIntent.data = Uri.parse("smsto: ${ContactList.getContact(itemViewPosition).numberContact}")
+        startActivity(phoneIntent)
+    }
+
+    private fun checkPhonePermissionAndSendSMS() {
+        if (ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(android.Manifest.permission.SEND_SMS), REQUEST_SEND_SMS)
+        } else {
+            sendSms()
+        }
+    }
+    private fun makePhoneCall(){
+            val phoneIntent = Intent(Intent.ACTION_CALL)
+            phoneIntent.data = Uri.parse("tel: ${ContactList.getContact(itemViewPosition).numberContact}")
+            startActivity(phoneIntent)
+    }
+
+    private fun checkPhonePermissionAndMakeCall() {
+        if (ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(android.Manifest.permission.CALL_PHONE), REQUEST_PHONE_CALL)
+        } else {
+            makePhoneCall()
+        }
+    }
+    /// todo fix onRequestPermissionsResult code
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            REQUEST_PHONE_CALL -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) makePhoneCall() else Toast.makeText(this@MainActivity, "Permissão negada.", Toast.LENGTH_LONG).show()
+            REQUEST_SEND_SMS -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) sendSms() else Toast.makeText(this@MainActivity, "Permissão negada.", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun showNoContactsWarning() {

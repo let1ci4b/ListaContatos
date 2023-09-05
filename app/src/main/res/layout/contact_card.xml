@@ -105,7 +105,8 @@
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_call"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/call_background" />
 
             <ImageView
                 android:id="@+id/buttonMessage"
@@ -115,7 +116,8 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintStart_toEndOf="@+id/buttonEdit"
                 app:layout_constraintEnd_toStartOf="@id/buttonCall"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/message_background" />
 
             <ImageView
                 android:id="@+id/buttonEdit"
