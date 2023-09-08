@@ -2,8 +2,8 @@ package com.example.recyclerlistacontatos.main
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.databinding.ContactCardBinding
@@ -45,7 +45,7 @@ class RecyclerViewAdapter(
 
     /// todo implements swipe gesture
     interface OnItemClickListener {
-        fun onClick(position: Int)
+        fun onClick(position: Int, action: Int)
         fun onLongClick(position: Int)
 
     }

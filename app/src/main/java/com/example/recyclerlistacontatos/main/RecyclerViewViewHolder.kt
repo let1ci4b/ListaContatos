@@ -20,13 +20,17 @@ class RecyclerViewViewHolder(private var binding: ContactCardBinding, private va
     }
 
     private fun setupListeners(){
-        itemView.setOnClickListener {
-            onItemClickListener.onClick(adapterPosition)
-        }
-
-        binding.unfoldLayout.setOnLongClickListener {
-            onItemClickListener.onLongClick(adapterPosition)
-            return@setOnLongClickListener true
+        with(binding) {
+            buttonCall.setOnClickListener {
+                onItemClickListener.onClick(adapterPosition, 1)
+            }
+            buttonMessage.setOnClickListener {
+                onItemClickListener.onClick(adapterPosition, 2)
+            }
+            unfoldLayout.setOnLongClickListener {
+                onItemClickListener.onLongClick(adapterPosition)
+                return@setOnLongClickListener true
+            }
         }
     }
 
@@ -39,14 +43,6 @@ class RecyclerViewViewHolder(private var binding: ContactCardBinding, private va
                     val intent = Intent(it.context, EditContactActivity::class.java)
                     intent.putExtra("contact", position)
                     it.context.startActivity(intent)
-                }
-
-                buttonMessage.setOnClickListener {
-
-                }
-
-                buttonCall.setOnClickListener {
-
                 }
 
             } else {

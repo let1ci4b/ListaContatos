@@ -1,5 +1,6 @@
 package com.example.recyclerlistacontatos.main
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -28,7 +29,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private var itemViewPosition: Int = 0
     var REQUEST_PHONE_CALL = 1
-    var REQUEST_SEND_SMS = 1
+    var REQUEST_SEND_SMS = 2
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainLayoutBinding.inflate(layoutInflater)
@@ -113,11 +116,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
                         itemViewPosition = position
-                        checkPhonePermissionAndMakeCall()
+                        checkPermissionAndSendIntent(Manifest.permission.CALL_PHONE, REQUEST_PHONE_CALL)
                     }
                     ItemTouchHelper.RIGHT -> {
                         itemViewPosition = position
-                        checkPhonePermissionAndSendSMS()
+                        checkPermissionAndSendIntent(Manifest.permission.SEND_SMS, REQUEST_SEND_SMS)
                     }
                 }
             }
@@ -125,34 +128,23 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         ItemTouchHelper(simpleCallback).attachToRecyclerView(binding.recyclerView)
     }
 
-    private fun sendSms() {
-        val phoneIntent = Intent(Intent.ACTION_SENDTO)
-        phoneIntent.data = Uri.parse("smsto: ${ContactList.getContact(itemViewPosition).numberContact}")
+    private fun sendIntent(action: String, uriString: String){
+        val phoneIntent = Intent(action)
+        phoneIntent.data = Uri.parse(uriString)
         startActivity(phoneIntent)
     }
 
-    private fun checkPhonePermissionAndSendSMS() {
-        if (ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(android.Manifest.permission.SEND_SMS), REQUEST_SEND_SMS)
+    private fun checkPermissionAndSendIntent(permission: String, requestCode: Int) {
+        if (ActivityCompat.checkSelfPermission(this@MainActivity, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(permission), requestCode)
         } else {
-            sendSms()
-        }
-    }
-    private fun makePhoneCall(){
-            val phoneIntent = Intent(Intent.ACTION_CALL)
-            phoneIntent.data = Uri.parse("tel: ${ContactList.getContact(itemViewPosition).numberContact}")
-            startActivity(phoneIntent)
-    }
-
-    private fun checkPhonePermissionAndMakeCall() {
-        if (ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(android.Manifest.permission.CALL_PHONE), REQUEST_PHONE_CALL)
-        } else {
-            makePhoneCall()
+            when(requestCode) {
+                1 -> sendIntent(Intent.ACTION_CALL, "tel: ${ContactList.getContact(itemViewPosition).numberContact}")
+                2 -> sendIntent(Intent.ACTION_SENDTO, "smsto: ${ContactList.getContact(itemViewPosition).numberContact}")
+            }
         }
     }
 
-    /// todo fix onRequestPermissionsResult code
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -160,8 +152,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode) {
-            REQUEST_PHONE_CALL -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) makePhoneCall() else Toast.makeText(this@MainActivity, "Permissão negada.", Toast.LENGTH_LONG).show()
-            REQUEST_SEND_SMS -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) sendSms() else Toast.makeText(this@MainActivity, "Permissão negada.", Toast.LENGTH_LONG).show()
+            1 -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) sendIntent(Intent.ACTION_CALL, "tel: ${ContactList.getContact(itemViewPosition).numberContact}")
+            else Toast.makeText(this@MainActivity, "Permissão negada.", Toast.LENGTH_LONG).show()
+            2 -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) sendIntent(Intent.ACTION_SENDTO, "smsto: ${ContactList.getContact(itemViewPosition).numberContact}")
+            else Toast.makeText(this@MainActivity, "Permissão negada.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -220,8 +214,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         return true
     }
 
-    override fun onClick(position: Int) {
-        Toast.makeText(this, "onClick $position", Toast.LENGTH_LONG).show()
+    override fun onClick(position: Int, action: Int) {
+        itemViewPosition = position
+        when(action) {
+            1 -> checkPermissionAndSendIntent(Manifest.permission.CALL_PHONE, REQUEST_PHONE_CALL)
+            2 -> checkPermissionAndSendIntent(Manifest.permission.SEND_SMS, REQUEST_SEND_SMS)
+        }
     }
 
     /// todo add snackbar for undo remove option
