@@ -8,7 +8,6 @@ import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
@@ -21,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.addcontacts.AddContactActivity
 import com.example.recyclerlistacontatos.databinding.MainLayoutBinding
 import com.example.recyclerlistacontatos.models.ContactList
+import com.example.recyclerlistacontatos.models.Contacts
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
@@ -28,6 +28,7 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    //private lateinit var arrayAdapter: ArrayAdapter<String>()
     private var itemViewPosition: Int = 0
     var REQUEST_PHONE_CALL = 1
     var REQUEST_SEND_SMS = 2
@@ -176,6 +177,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     override fun onResume() {
         super.onResume()
         showNoContactsWarning()
+        recyclerViewAdapter.filterList(ContactList.getList()) // Ramon
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
@@ -185,6 +187,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
                 val intent = Intent(this@MainActivity, AddContactActivity::class.java)
                 startActivity(intent)
             }
+
         }
     }
 
@@ -192,27 +195,41 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(com.example.recyclerlistacontatos.R.menu.main_menu, menu)
 
-        //val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchItem = menu?.findItem(com.example.recyclerlistacontatos.R.id.actionSearch)
         val searchView = searchItem?.actionView as SearchView
-        //searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+//        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+//        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
         searchView.queryHint = "Pesquisar"
 
-        /*searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                searchView.clearFocus()
-                searchView.setQuery("", false)
-                searchItem.collapseActionView()
-                Toast.makeText(this@MainActivity, "Looking for $query", Toast.LENGTH_LONG).show()
-                return true
+//                searchView.clearFocus()
+//                searchView.setQuery("", false)
+//                searchItem.collapseActionView()
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                Toast.makeText(this@MainActivity, "Looking for $newText", Toast.LENGTH_LONG).show()
+                filter(newText)
                 return false
             }
-        })*/
+        })
+
+//        searchView.setOnFocusChangeListener { v, hasFocus -> if (!hasFocus) v.clearFocus() } - Ramon
         return true
+    }
+
+    private fun filter(query: String?) {
+        val filteredlist: ArrayList<Contacts> = ArrayList()
+
+        for (item in ContactList.getList()) {
+            if (item.nameContact.toLowerCase().contains(query!!, ignoreCase = true)) {
+                filteredlist.add(item)
+            }
+        }
+        if (filteredlist.isEmpty()) {
+            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show()
+        } else recyclerViewAdapter.filterList(filteredlist)
     }
 
     override fun onClick(position: Int, action: Int) {
@@ -225,7 +242,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
 
     /// todo add snackbar for undo remove option
     override fun onLongClick(position: Int) {
-        Toast.makeText(this, "onLongClick $position", Toast.LENGTH_LONG).show()
+//        menuInflater.inflate(com.example.recyclerlistacontatos.R.menu.main_menu, Menu)
+//        val deleteItem = Menu.findItem(com.example.recyclerlistacontatos.R.id.actionDelete)
     }
 
 }

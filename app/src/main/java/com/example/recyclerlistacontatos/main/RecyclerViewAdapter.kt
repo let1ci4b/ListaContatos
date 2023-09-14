@@ -10,7 +10,7 @@ import com.example.recyclerlistacontatos.databinding.ContactCardBinding
 import com.example.recyclerlistacontatos.models.Contacts
 
 class RecyclerViewAdapter(
-    private val contactsList : ArrayList<Contacts>,
+    private var contactsList : ArrayList<Contacts>,
     private val recyclerView: RecyclerView,
     private val onItemClickListener: OnItemClickListener
     ) : RecyclerView.Adapter<RecyclerViewViewHolder>() {
@@ -19,6 +19,12 @@ class RecyclerViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewViewHolder {
         val binding = ContactCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecyclerViewViewHolder(binding, onItemClickListener)
+    }
+
+    // method for filtering our recyclerview items.
+    fun filterList(filterlist: ArrayList<Contacts>) {
+        contactsList = filterlist
+        notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
