@@ -8,6 +8,7 @@ import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
@@ -91,12 +92,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
                     .addSwipeRightBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.message_background))
                     .addSwipeRightActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_message)
                     .addSwipeRightLabel("Mensagem")
-                    .setSwipeRightLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.white))
+                    .setSwipeRightLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.light_card_background))
                     .addCornerRadius(1,32)
                     .addSwipeLeftBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.call_background))
                     .addSwipeLeftActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_call)
                     .addSwipeLeftLabel("Chamar")
-                    .setSwipeLeftLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.white))
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.light_card_background))
                     .create()
                     .decorate()
 

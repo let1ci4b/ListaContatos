@@ -7,7 +7,7 @@
         />
 
     <solid
-        android:color="@color/fabColor"
+        android:color="@color/green_icons_background"
         />
 
 </shape>
