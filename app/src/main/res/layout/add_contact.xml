@@ -22,15 +22,15 @@
             android:id="@+id/actionBarText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/add_contact_name"
             android:textColor="?attr/colorPrimaryVariant"
             android:textSize="18sp"
-            android:layout_marginStart="55dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -167,7 +167,7 @@
             android:id="@+id/buttonSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00FFFFFF"
+            android:background="@drawable/button_save_background"
             android:text="@string/button_save"
             android:textColor="?attr/colorPrimaryVariant"
             app:layout_constraintBottom_toBottomOf="parent"

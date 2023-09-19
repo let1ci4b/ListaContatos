@@ -8,4 +8,16 @@
     <string name="button_cancel">Cancelar</string>
     <string name="main_activity_title">Meus contatos</string>
     <string name="no_contact_warning">Você não possui contatos.\nClique aqui para adicionar!</string>
+    <string name="empty_name_warning">Insira um nome.</string>
+    <string name="incorrect_phone_size_warning">Telefone deve conter 11 dígitos.</string>
+    <string name="incorrect_phone_format_warning">Insira apenas números.</string>
+    <string name="unsaved_alterations_warning">"Alterações não salvas."</string>
+    <string name="added_contact_warning">"foi adicionado(a) com sucesso!"</string>
+    <string name="duplicated_contact_warning">Esse número já está na lista.</string>
+    <string name="edited_contact_warning">"foi editado(a) com sucesso!"</string>
+    <string name="permission_denied">"Permissão negada"</string>
+    <string name="no_result_on_search">"Sem resultados..."</string>
+    <string name="search_view_hint">"Pesquisar"</string>
+    <string name="message_label">"Mensagem"</string>
+    <string name="call_label">"Chamar"</string>
 </resources>

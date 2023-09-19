@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
+import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.EditContactBinding
 import com.example.recyclerlistacontatos.models.ContactList
 import com.example.recyclerlistacontatos.models.Contacts
@@ -12,17 +13,17 @@ import com.example.recyclerlistacontatos.models.Contacts
 class EditContactActivity : AppCompatActivity() {
     private lateinit var binding: EditContactBinding
     private var position: Int = 0
+    private var isFieldPhoneValidated: Boolean = false
+    private var isFieldNameValidated: Boolean = false
+    enum class Field { NAME, PHONE }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = EditContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        /// todo fix toolbar
         supportActionBar?.hide()
-
         position = intent.extras?.getInt("contact") as Int
-
         setupListeners()
         setupFields()
     }
@@ -34,32 +35,41 @@ class EditContactActivity : AppCompatActivity() {
             }
 
             buttonSave.setOnClickListener {
-                validateNewContact()
                 updateContactInformation()
             }
 
             fieldContactName.doOnTextChanged { text, start, before, count ->
-                validateNewContact()
+                isFieldValidated(Field.NAME)
             }
 
             fieldContactPhone.doOnTextChanged { text, start, before, count ->
-                validateNewContact()
+                isFieldValidated(Field.PHONE)
             }
+
         }
     }
 
-    private fun validateNewContact() {
-        with(binding) {
-            buttonSave.isEnabled = false
-            /// todo verify fieldContactPhone error
-            when {
-                fieldContactName.text.isEmpty() -> fieldContactName.setError("Insira um nome.")
-                fieldContactName.text.isDigitsOnly() -> fieldContactName.setError("Esse campo não pode conter apenas números.")
-                !fieldContactPhone.text.isDigitsOnly() -> fieldContactPhone.setError("Insira apenas números.")
-                fieldContactPhone.text.length != 11 -> fieldContactPhone.setError("Telefone deve conter 11 dígitos.")
-                else ->  buttonSave.isEnabled = true
+    private fun isFieldValidated(field: Field) {
+        with(binding){
+            when(field) {
+                Field.NAME -> {
+                    fieldContactName.error = null
+                    if(fieldContactName.text.isEmpty()) fieldContactName.error = getString(R.string.empty_name_warning)
+                    isFieldNameValidated = (fieldContactName.error.isNullOrEmpty())
+                }
+                Field.PHONE -> {
+                    fieldContactPhone.error = null
+                    if(!fieldContactPhone.text.isDigitsOnly()) fieldContactPhone.error = getString(R.string.incorrect_phone_format_warning)
+                    else if(fieldContactPhone.text.toString().length != 11) fieldContactPhone.error = getString(R.string.incorrect_phone_size_warning)
+                    isFieldPhoneValidated = (fieldContactPhone.error.isNullOrEmpty())
+                }
             }
+            buttonSave()
         }
+    }
+
+    private fun buttonSave() {
+        binding.buttonSave.isEnabled = isFieldNameValidated && isFieldPhoneValidated
     }
     private fun setupFields() {
         with(binding) {
@@ -79,9 +89,9 @@ class EditContactActivity : AppCompatActivity() {
             if (shouldAddPhone) {
                 val contact = Contacts(name[0].toString().uppercase(), name, phone)
                 ContactList.editContact(contact, position)
-                printTextOnScreen("$name foi editado(a) com sucesso!")
+                printTextOnScreen(name + getString(R.string.edited_contact_warning))
                 finish()
-            } else printTextOnScreen("Esse número já está na lista.")
+            } else printTextOnScreen(getString(R.string.duplicated_contact_warning))
         }
     }
 

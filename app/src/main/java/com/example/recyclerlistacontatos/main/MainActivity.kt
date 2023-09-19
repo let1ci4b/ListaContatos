@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.addcontacts.AddContactActivity
 import com.example.recyclerlistacontatos.databinding.MainLayoutBinding
 import com.example.recyclerlistacontatos.models.ContactList
@@ -28,7 +29,6 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
-    //private lateinit var arrayAdapter: ArrayAdapter<String>()
     private var itemViewPosition: Int = 0
     var REQUEST_PHONE_CALL = 1
     var REQUEST_SEND_SMS = 2
@@ -39,9 +39,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         binding = MainLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        /// todo implement actionBar with binding
-        /// todo fix toolbar themes
-        setSupportActionBar(findViewById(com.example.recyclerlistacontatos.R.id.mainToolbar))
+        /// todo fix toolbar binding
+        //setSupportActionBar(findViewById(com.example.recyclerlistacontatos.R.id.mainToolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 //        supportActionBar?.setDisplayShowHomeEnabled(true)
 //        supportActionBar?.setIcon(R.drawable.ic_main)
@@ -92,12 +91,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
                 )
                     .addSwipeRightBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.message_background))
                     .addSwipeRightActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_message)
-                    .addSwipeRightLabel("Mensagem")
+                    .addSwipeRightLabel(getString(R.string.message_label))
                     .setSwipeRightLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.light_card_background))
                     .addCornerRadius(1,32)
                     .addSwipeLeftBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.call_background))
                     .addSwipeLeftActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_call)
-                    .addSwipeLeftLabel("Chamar")
+                    .addSwipeLeftLabel(getString(R.string.call_label))
                     .setSwipeLeftLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.light_card_background))
                     .create()
                     .decorate()
@@ -155,9 +154,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode) {
             1 -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) sendIntent(Intent.ACTION_CALL, "tel: ${ContactList.getContact(itemViewPosition).numberContact}")
-            else Toast.makeText(this@MainActivity, "Permissão negada.", Toast.LENGTH_LONG).show()
+            else Toast.makeText(this@MainActivity, getString(R.string.permission_denied), Toast.LENGTH_LONG).show()
             2 -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) sendIntent(Intent.ACTION_SENDTO, "smsto: ${ContactList.getContact(itemViewPosition).numberContact}")
-            else Toast.makeText(this@MainActivity, "Permissão negada.", Toast.LENGTH_LONG).show()
+            else Toast.makeText(this@MainActivity, getString(R.string.permission_denied), Toast.LENGTH_LONG).show()
         }
     }
 
@@ -199,7 +198,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         val searchView = searchItem?.actionView as SearchView
 //        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
 //        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
-        searchView.queryHint = "Pesquisar"
+        searchView.queryHint = getString(R.string.search_view_hint)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -228,7 +227,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
             }
         }
         if (filteredlist.isEmpty()) {
-            Toast.makeText(this, "No Data Found..", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.no_result_on_search), Toast.LENGTH_SHORT).show()
         } else recyclerViewAdapter.filterList(filteredlist)
     }
 

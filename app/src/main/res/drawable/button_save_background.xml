@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color when the row is selected -->
+    <item android:state_enabled="true" >
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/colorSecondary"/>
+            <corners android:radius="25dp"/> <!-- valor do arredondamento das bordas -->
+        </shape>
+    </item>
+    <!-- Standard background color -->
+    <item >
+        <shape android:shape="rectangle">
+            <solid android:color="?attr/colorPrimary"/>
+            <corners android:radius="25dp"/> <!-- valor do arredondamento das bordas -->
+        </shape>
+    </item>
+</selector>
