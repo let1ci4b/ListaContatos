@@ -1,7 +1,9 @@
 package com.example.recyclerlistacontatos.addcontacts
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
@@ -20,19 +22,21 @@ class AddContactActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = AddContactBinding.inflate(layoutInflater)
-        supportActionBar?.hide()
         setContentView(binding.root)
-        /// todo fix toolbar binding
         setSupportActionBar(binding.mainToolbar.mainToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        title = "Novo Contato"
+
         setupListeners()
         binding.buttonSave.isEnabled = false
     }
 
+    /// TODO implement dialogs
     private fun setupListeners() {
         with(binding) {
            buttonCancel.setOnClickListener {
-                finish()
+               finish()
+//               setupOnCancelDialog()
                 printTextOnScreen(getString(R.string.unsaved_alterations_warning))
             }
 
@@ -50,6 +54,29 @@ class AddContactActivity : AppCompatActivity() {
 
         }
     }
+
+//    private fun setupOnCancelDialog() {
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle("Androidly Alert")
+//        builder.setMessage("We have a message")
+//        builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+//
+//        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+//            Toast.makeText(applicationContext,
+//                android.R.string.yes, Toast.LENGTH_SHORT).show()
+//        }
+//
+//        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+//            Toast.makeText(applicationContext,
+//                android.R.string.no, Toast.LENGTH_SHORT).show()
+//        }
+//
+//        builder.setNeutralButton("Maybe") { dialog, which ->
+//            Toast.makeText(applicationContext,
+//                "Maybe", Toast.LENGTH_SHORT).show()
+//        }
+//        builder.show()
+//    }
 
     private fun isFieldValidated(field: Field) {
         with(binding){

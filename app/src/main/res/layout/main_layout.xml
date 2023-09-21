@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:descendantFocusability="beforeDescendants"
     android:background="?attr/colorPrimary">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,18 +19,6 @@
         <include
             android:id="@+id/mainToolbar"
             layout="@layout/toolbar" />
-
-        <TextView
-            android:id="@+id/toolbarTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:text="Contatos"
-            android:textSize="20sp"
-            android:textColor="?attr/colorPrimaryVariant"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

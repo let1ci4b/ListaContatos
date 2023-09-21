@@ -23,6 +23,7 @@
         </activity>
         <activity android:name=".addcontacts.AddContactActivity"
             android:exported="true"
+            android:theme="@style/Theme.RecyclerListaContatos"
             android:screenOrientation="portrait"
             android:parentActivityName=".main.MainActivity">
         </activity>

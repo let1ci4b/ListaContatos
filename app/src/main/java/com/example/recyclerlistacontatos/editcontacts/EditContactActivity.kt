@@ -21,8 +21,9 @@ class EditContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = EditContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        /// todo fix toolbar
-        supportActionBar?.hide()
+        setSupportActionBar(binding.mainToolbar.mainToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         position = intent.extras?.getInt("contact") as Int
         setupListeners()
         setupFields()

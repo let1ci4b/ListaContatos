@@ -2,16 +2,19 @@ package com.example.recyclerlistacontatos.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -29,25 +32,30 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
+    private lateinit var searchView: SearchView
+    private var searchItem: MenuItem? = null
     private var itemViewPosition: Int = 0
     var REQUEST_PHONE_CALL = 1
     var REQUEST_SEND_SMS = 2
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.mainToolbar.mainToolbar)
 
-        /// todo fix toolbar binding
-        //setSupportActionBar(findViewById(com.example.recyclerlistacontatos.R.id.mainToolbar))
+        //supportActionBar?.setDisplayShowTitleEnabled(false);
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-//        supportActionBar?.setDisplayShowHomeEnabled(true)
-//        supportActionBar?.setIcon(R.drawable.ic_main)
 
         setupRecyclerView()
         setupListeners()
         showNoContactsWarning()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        searchItem?.collapseActionView()
+        searchView.isIconified = true
     }
 
     private fun setupRecyclerView() {
@@ -160,6 +168,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         }
     }
 
+    /// TODO insert vector on no contacts warning
     private fun showNoContactsWarning() {
         with(binding) {
             if (ContactList.listSize() == 0) {
@@ -192,20 +201,20 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
 
     // todo implement search bar using AutoCompletTextView
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(com.example.recyclerlistacontatos.R.menu.main_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
 
-        val searchItem = menu?.findItem(com.example.recyclerlistacontatos.R.id.actionSearch)
-        val searchView = searchItem?.actionView as SearchView
-//        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
+        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchItem = menu?.findItem(R.id.actionSearch)
+        searchView = searchItem?.actionView as SearchView
+
         searchView.queryHint = getString(R.string.search_view_hint)
+
+        searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-//                searchView.clearFocus()
-//                searchView.setQuery("", false)
-//                searchItem.collapseActionView()
-                return false
+                searchView.clearFocus()
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -214,10 +223,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
             }
         })
 
-//        searchView.setOnFocusChangeListener { v, hasFocus -> if (!hasFocus) v.clearFocus() } - Ramon
         return true
     }
-
     private fun filter(query: String?) {
         val filteredlist: ArrayList<Contacts> = ArrayList()
 
