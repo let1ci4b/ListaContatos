@@ -10,6 +10,13 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <item
+        android:id="@+id/delteItem"
+        android:icon="@drawable/ic_delete"
+        android:orderInCategory="100"
+        android:title="Delete"
+        app:showAsAction="always" />
+
 <!--    <item-->
 <!--        android:id="@+id/actionDelete"-->
 <!--        android:title="Delete"-->

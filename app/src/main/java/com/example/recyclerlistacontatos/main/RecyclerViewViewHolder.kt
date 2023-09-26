@@ -5,10 +5,12 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.databinding.ContactCardBinding
 import com.example.recyclerlistacontatos.editcontacts.EditContactActivity
+import com.example.recyclerlistacontatos.models.ContactList
 import com.example.recyclerlistacontatos.models.Contacts
 
-class RecyclerViewViewHolder(private var binding: ContactCardBinding, private val onItemClickListener: RecyclerViewAdapter.OnItemClickListener) : RecyclerView.ViewHolder(binding.root) {
+class RecyclerViewViewHolder(private var binding: ContactCardBinding, private val onItemClickListener: RecyclerViewAdapter.OnItemClick) : RecyclerView.ViewHolder(binding.root) {
 
+    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     fun bind(contact: Contacts, isExpanded: Boolean, expandableCallback: () -> Unit) {
         with(binding) {
             nameInicialImage.text = contact.titleImage
@@ -22,13 +24,21 @@ class RecyclerViewViewHolder(private var binding: ContactCardBinding, private va
     private fun setupListeners(){
         with(binding) {
             buttonCall.setOnClickListener {
-                onItemClickListener.onClick(adapterPosition, 1)
+                onItemClickListener.onItemClick(adapterPosition, 1)
             }
             buttonMessage.setOnClickListener {
-                onItemClickListener.onClick(adapterPosition, 2)
+                onItemClickListener.onItemClick(adapterPosition, 2)
             }
             unfoldLayout.setOnLongClickListener {
-                onItemClickListener.onLongClick(adapterPosition)
+                recyclerViewAdapter.toggleIcon(binding, adapterPosition)
+                onItemClickListener.onLongPress(itemView, ContactList.getContact(adapterPosition), adapterPosition)
+//                if (itemClick == null) {
+//                    return false;
+//                } else {
+//                    itemClick.onLongPress(view, list.get(position), position);
+//                    return true;
+//                }
+                //onItemClickListener.onLongClick(adapterPosition)
                 return@setOnLongClickListener true
             }
         }

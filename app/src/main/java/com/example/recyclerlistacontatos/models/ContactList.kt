@@ -1,15 +1,19 @@
 package com.example.recyclerlistacontatos.models
 
+import com.example.recyclerlistacontatos.main.RecyclerViewAdapter
+
 object ContactList {
 
     private var contactList = arrayListOf<Contacts>()
+    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
 
     fun addContact(contact: Contacts){
         contactList.add(contact)
     }
 
-    fun removeContact(contact: Contacts){
-        contactList.remove(contact)
+    fun removeContact(position: Int){
+        contactList.removeAt(position)
+        recyclerViewAdapter.selectedIndex = -1
     }
 
     fun editContact(contact: Contacts, position: Int) {

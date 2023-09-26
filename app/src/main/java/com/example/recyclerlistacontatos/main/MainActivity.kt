@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -29,27 +31,52 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
 @Suppress("DEPRECATION")
-class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private lateinit var searchView: SearchView
+    private lateinit var actionMode: ActionMode
     private var searchItem: MenuItem? = null
+    private var deleteItem: MenuItem? = null
     private var itemViewPosition: Int = 0
     var REQUEST_PHONE_CALL = 1
     var REQUEST_SEND_SMS = 2
 
+    var showDeleteActionToolBar : Boolean = false
+        set(value) {
+            if(value) changeToolBarToDeleteAction()
+            field = value
+        }
+//    var setToolbar : Boolean
+//        set(value) {
+//            if (value == true) {
+//                changeToSelect()
+//
+//                private fun changeToSelect(){
+//                    menu.toolbar.backgroundTint = zxxx
+//                }
+//            }
+//
+//        }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.mainToolbar.mainToolbar)
 
-        //supportActionBar?.setDisplayShowTitleEnabled(false);
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         setupRecyclerView()
         setupListeners()
         showNoContactsWarning()
+    }
+
+    private fun changeToolBarToDeleteAction() {
+        searchView.visibility = View.GONE
+        searchItem?.isVisible = false
+        deleteItem?.isVisible = true
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setBackgroundDrawable( ColorDrawable(resources.getColor(R.color.green_icons_background)))
     }
 
     override fun onPause() {
@@ -185,7 +212,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     override fun onResume() {
         super.onResume()
         showNoContactsWarning()
-        recyclerViewAdapter.filterList(ContactList.getList()) // Ramon
+        recyclerViewAdapter.filterList(ContactList.getList())
         recyclerViewAdapter.notifyDataSetChanged()
     }
 
@@ -205,6 +232,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchItem = menu?.findItem(R.id.actionSearch)
+        //deleteItem = menu?.findItem(R.id.delteItem)
         searchView = searchItem?.actionView as SearchView
 
         searchView.queryHint = getString(R.string.search_view_hint)
@@ -229,7 +257,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         val filteredlist: ArrayList<Contacts> = ArrayList()
 
         for (item in ContactList.getList()) {
-            if (item.nameContact.toLowerCase().contains(query!!, ignoreCase = true)) {
+            if (item.nameContact.contains(query!!, ignoreCase = true) || item.numberContact.contains(query!!, ignoreCase = true)) {
                 filteredlist.add(item)
             }
         }
@@ -238,7 +266,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         } else recyclerViewAdapter.filterList(filteredlist)
     }
 
-    override fun onClick(position: Int, action: Int) {
+    override fun onItemClick(position: Int, action: Int) {
         itemViewPosition = position
         when(action) {
             1 -> checkPermissionAndSendIntent(Manifest.permission.CALL_PHONE, REQUEST_PHONE_CALL)
@@ -247,9 +275,75 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
     }
 
     /// todo add snackbar for undo remove option
-    override fun onLongClick(position: Int) {
+    override fun onLongPress(view: View, contact: Contacts, position: Int) {
 //        menuInflater.inflate(com.example.recyclerlistacontatos.R.menu.main_menu, Menu)
 //        val deleteItem = Menu.findItem(com.example.recyclerlistacontatos.R.id.actionDelete)
+        showDeleteActionToolBar = true
+        Toast.makeText(this, "clicked "+ contact.nameContact, Toast.LENGTH_SHORT).show()
     }
 
+    //toggling action bar that will change the color and option
+    private fun toggleActionBar(position: Int) {
+        if (actionMode == null) {
+            //actionMode = startSupportActionMode(actionCallback)
+        }
+        toggleSelection(position)
+    }
+
+    //toggle selection of items and show the count of selected items on the action bar
+    private fun toggleSelection(position: Int) {
+        recyclerViewAdapter.toggleSelection(position)
+        val count: Int = recyclerViewAdapter.selectedItemCount()
+        if (count == 0) {
+            actionMode.finish()
+        } else {
+            actionMode.setTitle(count.toString())
+            actionMode.invalidate()
+        }
+    }
+
+    //after selection, we need to delete selected items by tapping on delete icon
+    private fun deleteContacts() {
+        val selectedItemPositions: List<Int> = recyclerViewAdapter.getSelectedItems()!!
+        for (i in selectedItemPositions.indices.reversed()) {
+            ContactList.removeContact(selectedItemPositions[i])
+        }
+        recyclerViewAdapter.notifyDataSetChanged()
+    }
+
+    // making the action bar perform a certain action by the user interaction
+    private class ActionCallback : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            //utill.toggleStatusBarColor(this, R.color.green_icons_background);
+            mode?.menuInflater?.inflate(R.menu.main_menu_delete, menu);
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            when(item?.itemId) {
+                R.id.delteItem -> {
+                //deleteContacts()
+                    mode?.finish()
+                    return true
+                }
+            }
+            return false
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+//            recyclerViewAdapter.clearSelection()
+//            actionMode = null
+//            utill.toggleStatusBarColor(this, R.color.black)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) finish()
+        else Toast.makeText(applicationContext, item.title, Toast.LENGTH_SHORT).show()
+        return super.onOptionsItemSelected(item)
+    }
 }
