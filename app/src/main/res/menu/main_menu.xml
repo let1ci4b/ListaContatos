@@ -15,7 +15,8 @@
         android:icon="@drawable/ic_delete"
         android:orderInCategory="100"
         android:title="Delete"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        android:visible="false" />
 
 <!--    <item-->
 <!--        android:id="@+id/actionDelete"-->

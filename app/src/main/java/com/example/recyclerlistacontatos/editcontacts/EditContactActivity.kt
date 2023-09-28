@@ -88,7 +88,7 @@ class EditContactActivity : AppCompatActivity() {
             val shouldAddPhone = !ContactList.phoneExist(phone, position)
 
             if (shouldAddPhone) {
-                val contact = Contacts(name[0].toString().uppercase(), name, phone)
+                val contact = Contacts(name[0].toString().uppercase(), name, phone, false)
                 ContactList.editContact(contact, position)
                 printTextOnScreen(name + getString(R.string.edited_contact_warning))
                 finish()

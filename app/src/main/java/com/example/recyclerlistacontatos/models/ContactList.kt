@@ -1,19 +1,15 @@
 package com.example.recyclerlistacontatos.models
 
-import com.example.recyclerlistacontatos.main.RecyclerViewAdapter
-
 object ContactList {
 
     private var contactList = arrayListOf<Contacts>()
-    private lateinit var recyclerViewAdapter: RecyclerViewAdapter
 
     fun addContact(contact: Contacts){
         contactList.add(contact)
     }
 
-    fun removeContact(position: Int){
-        contactList.removeAt(position)
-        recyclerViewAdapter.selectedIndex = -1
+    fun removeContact(){
+        contactList.removeAll { it.isChecked }
     }
 
     fun editContact(contact: Contacts, position: Int) {
@@ -36,6 +32,21 @@ object ContactList {
         return position?.let {
             contactList.any { it.numberContact == phone && phone != contactList[position].numberContact }
         } ?: contactList.any { it.numberContact == phone }
+    }
+
+    fun setupCheck(position: Int) {
+        contactList[position].isChecked = true
+    }
+
+    fun clearCheckSelection() {
+        for (contact in contactList) {
+            contact.isChecked = false
+        }
+    }
+
+    fun selectedItemsCount() : Int {
+        /// TODO create function
+        return 0
     }
 }
 

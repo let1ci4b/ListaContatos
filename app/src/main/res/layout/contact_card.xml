@@ -20,31 +20,44 @@
             android:id="@+id/unfoldLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/expandedLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/expandedLayout" >
-
-        <TextView
-            android:id="@+id/contactImage"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/background_main_profile"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/nameInicialImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:textColor="@color/light_card_background"
-            app:layout_constraintEnd_toEndOf="@id/contactImage"
-            app:layout_constraintStart_toStartOf="@id/contactImage"
-            app:layout_constraintTop_toTopOf="@id/contactImage"
-            app:layout_constraintBottom_toBottomOf="@id/contactImage"
-            tools:text="B" />
+            <TextView
+                android:id="@+id/contactImage"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="@drawable/background_main_profile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/nameInicialImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/light_card_background"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@id/contactImage"
+                app:layout_constraintEnd_toEndOf="@id/contactImage"
+                app:layout_constraintStart_toStartOf="@id/contactImage"
+                app:layout_constraintTop_toTopOf="@id/contactImage"
+                tools:text="B" />
+
+            <ImageView
+                android:id="@+id/checkedImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:src="@drawable/ic_check"
+                app:layout_constraintBottom_toBottomOf="@id/contactImage"
+                app:layout_constraintEnd_toEndOf="@id/contactImage"
+                app:layout_constraintStart_toStartOf="@id/contactImage"
+                app:layout_constraintTop_toTopOf="@id/contactImage"
+                android:visibility="gone" />
+
 
             <TextView
                 android:id="@+id/contactName"
@@ -62,14 +75,14 @@
                 tools:text="CONTATO" />
 
             <View
-            android:layout_width="0dp"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginStart="10dp"
-            android:background="@color/gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/contactImage"
-            app:layout_constraintTop_toBottomOf="@+id/contactName" />
+                android:layout_width="0dp"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/contactImage"
+                app:layout_constraintTop_toBottomOf="@+id/contactName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

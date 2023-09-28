@@ -109,7 +109,7 @@ class AddContactActivity : AppCompatActivity() {
             val shouldAddPhone = !ContactList.phoneExist(phone, null)
 
             if (shouldAddPhone) {
-                val contact = Contacts(name[0].toString().uppercase(), name, phone)
+                val contact = Contacts(name[0].toString().uppercase(), name, phone, false)
                 ContactList.addContact(contact)
                 printTextOnScreen(name + getString(R.string.added_contact_warning))
                 finish()
