@@ -16,4 +16,5 @@
     <color name="message_background">#16ABE3</color>
     <color name="card_icon">#282828</color>
     <color name="green_icons_background">#15B76C</color>
+    <color name="box_stroke">#FF000000</color>
 </resources>
