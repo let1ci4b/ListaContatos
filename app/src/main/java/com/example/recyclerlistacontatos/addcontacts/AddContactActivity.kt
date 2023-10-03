@@ -16,6 +16,13 @@ class AddContactActivity : AppCompatActivity() {
     private var isFieldNameValidated: Boolean = false
     enum class Field { NAME, PHONE }
 
+    /// TODO define default profile pic
+    /// TODO forbid user to give enters (name input text)
+    /// TODO change input icons color when isn't focused
+    /// TODO change buttons style
+    /// TODO replace cancel button comportment
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = AddContactBinding.inflate(layoutInflater)
@@ -69,26 +76,29 @@ class AddContactActivity : AppCompatActivity() {
 // }
 // builder.show()
 // }
+
+    /// TODO validate inputs filled with spaces
     private fun isFieldValidated(field: Field) {
         with(binding){
             when(field) {
                 Field.NAME -> {
                     fieldContactName.error = null
-                    if(fieldContactName.text.toString().isEmpty())
+                    if(fieldContactName.text.toString().isNullOrBlank()) {
+                        layoutContactName.isErrorEnabled = true
                         layoutContactName.error = getString(R.string.empty_name_warning)
-
+                    }
+                    else layoutContactName.error = null
                     isFieldNameValidated = (layoutContactName.error.isNullOrEmpty())
 
                 }
                 Field.PHONE -> {
                     fieldContactPhone.error = null
-
-                    if(!fieldContactPhone.text?.toString()?.isDigitsOnly()!!)
-                        layoutContactPhone.error = getString(R.string.incorrect_phone_format_warning)
-
-                    else if(fieldContactPhone.text?.toString()?.length != 11) layoutContactPhone.error = getString(R.string.incorrect_phone_size_warning)
+                    if(!fieldContactPhone.text?.toString()?.isDigitsOnly()!!) layoutContactPhone.error = getString(R.string.incorrect_phone_format_warning)
+                    else if(fieldContactPhone.text?.toString()?.length != 11) {
+                        layoutContactPhone.error = getString(R.string.incorrect_phone_size_warning)
+                    }
+                    else layoutContactPhone.error = null
                     isFieldPhoneValidated = (layoutContactPhone.error.isNullOrEmpty())
-
                 }
             }
 

@@ -46,31 +46,18 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layoutContactName"
-        android:theme="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="280dp"
-        app:boxStrokeColor="@color/stroke_color"
-        app:boxStrokeWidthFocused="1dp"
-        app:boxStrokeWidth="1dp"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
+        android:layout_marginTop="260dp"
         app:endIconDrawable="@drawable/ic_field_name"
-        app:endIconMode="custom"
-        app:endIconTint="@color/green_icons_background"
-        app:errorEnabled="true"
-        android:textColorHint="?attr/colorSecondaryVariant"
-        app:hintTextColor="@color/box_stroke"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fieldContactName"
-            android:theme="@style/Widget.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="@color/transparent"
@@ -88,27 +75,17 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layoutContactPhone"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="7dp"
         app:counterEnabled="true"
         app:counterMaxLength="11"
-        app:boxStrokeColor="@color/stroke_color"
-        app:boxStrokeWidthFocused="1dp"
-        app:boxStrokeWidth="1dp"
-        app:boxCornerRadiusBottomEnd="10dp"
-        app:boxCornerRadiusBottomStart="10dp"
-        app:boxCornerRadiusTopEnd="10dp"
-        app:boxCornerRadiusTopStart="10dp"
         app:endIconDrawable="@drawable/ic_field_phone"
-        app:endIconMode="custom"
-        app:endIconTint="@color/green_icons_background"
-        app:errorEnabled="true"
-        android:textColorHint="?attr/colorSecondaryVariant"
-        app:hintTextColor="@color/box_stroke"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutContactName">
+        app:layout_constraintTop_toBottomOf="@+id/layoutContactName" >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fieldContactPhone"

@@ -55,12 +55,12 @@ class EditContactActivity : AppCompatActivity() {
             when(field) {
                 Field.NAME -> {
                     fieldContactName.error = null
-                    if(fieldContactName.text.isEmpty()) fieldContactName.error = getString(R.string.empty_name_warning)
+                    if(fieldContactName.text?.isEmpty()!!) fieldContactName.error = getString(R.string.empty_name_warning)
                     isFieldNameValidated = (fieldContactName.error.isNullOrEmpty())
                 }
                 Field.PHONE -> {
                     fieldContactPhone.error = null
-                    if(!fieldContactPhone.text.isDigitsOnly()) fieldContactPhone.error = getString(R.string.incorrect_phone_format_warning)
+                    if(!fieldContactPhone.text?.isDigitsOnly()!!) fieldContactPhone.error = getString(R.string.incorrect_phone_format_warning)
                     else if(fieldContactPhone.text.toString().length != 11) fieldContactPhone.error = getString(R.string.incorrect_phone_size_warning)
                     isFieldPhoneValidated = (fieldContactPhone.error.isNullOrEmpty())
                 }
@@ -74,9 +74,10 @@ class EditContactActivity : AppCompatActivity() {
     }
     private fun setupFields() {
         with(binding) {
-            val (_, name, number) = ContactList.getContact(position)
+            val (titleImage, name, number) = ContactList.getContact(position)
             fieldContactName.setText(name)
             fieldContactPhone.setText(number)
+            contactNameInicial.text = titleImage
         }
     }
 

@@ -42,6 +42,15 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     var REQUEST_PHONE_CALL = 1
     var REQUEST_SEND_SMS = 2
 
+    /// TODO implement app default text font
+    /// TODO fix toolbar font size
+    /// TODO refactor XML layouts using style
+    /// TODO search for hardcoded strings in code
+    /// TODO adjust cardview border on swipe
+    /// TODO refactor "no contacts warning" (png to svg vector)
+    // todo implement search bar using AutoCompleteTextView
+    /// todo add snackbar for undo remove option
+
     private var showDeleteActionToolBar : Boolean = false
         set(value) {
             if(value) changeToolBarToDeleteAction()
@@ -99,7 +108,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                 target: RecyclerView.ViewHolder
             ): Boolean = false
 
-            /// todo adjust cardview border on swipe
             override fun onChildDraw(
                 c: Canvas,
                 recyclerView: RecyclerView,
@@ -190,7 +198,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         }
     }
 
-    /// TODO insert vector on no contacts warning
     private fun showNoContactsWarning() {
         with(binding) {
             if (ContactList.listSize() == 0) {
@@ -221,7 +228,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         }
     }
 
-    // todo implement search bar using AutoCompletTextView
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
 
@@ -279,7 +285,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         }
     }
 
-    /// todo add snackbar for undo remove option
     override fun onLongPress(view: View, contact: Contacts, position: Int) {
         //recyclerViewAdapter.toggleIcon(binding, position)
         showDeleteActionToolBar = true
