@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
     android:layout_margin="4dp"
-    app:cardBackgroundColor="?attr/colorSecondary"
+    app:cardBackgroundColor="@color/background_card_color"
     app:cardCornerRadius="32dp"
     app:contentPadding="10dp" >
 
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textColor="@color/light_card_background"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@id/contactImage"
                 app:layout_constraintEnd_toEndOf="@id/contactImage"

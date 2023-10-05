@@ -7,10 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Canvas
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -35,7 +33,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private lateinit var searchView: SearchView
-    private lateinit var actionMode: ActionMode
     private var searchItem: MenuItem? = null
     private var deleteItem: MenuItem? = null
     private var itemViewPosition: Int = 0
@@ -48,6 +45,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     /// TODO search for hardcoded strings in code
     /// TODO adjust cardview border on swipe
     /// TODO refactor "no contacts warning" (png to svg vector)
+    /// TODO actualize "no contacts warning" when recycler is empty
     // todo implement search bar using AutoCompleteTextView
     /// todo add snackbar for undo remove option
 
@@ -62,9 +60,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         binding = MainLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.mainToolbar.mainToolbar)
-
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
-
         setupRecyclerView()
         setupListeners()
         showNoContactsWarning()
@@ -74,13 +70,18 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         searchView.visibility = View.GONE
         searchItem?.isVisible = false
         deleteItem?.isVisible = true
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.green_icons_background)))
+        //supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.title = "${ContactList.selectedItemsCount()} selecionados"
+        //supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.green_icons_background)))
     }
 
     private fun resetDefaultToolbar() {
         setSupportActionBar(binding.mainToolbar.mainToolbar)
-        supportActionBar?.setBackgroundDrawable(resources.getDrawable(R.drawable.toolbar_background))
+        //supportActionBar?.setBackgroundDrawable(resources.getDrawable(R.drawable.toolbar_background))
+        ContactList.isOnDeleteMode = false
+        ContactList.clearCheckSelection()
+        supportActionBar?.title = "Contatos"
+        supportActionBar?.setDisplayShowTitleEnabled(true)
     }
 
     override fun onPause() {
@@ -130,12 +131,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                     .addSwipeRightBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.message_background))
                     .addSwipeRightActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_message)
                     .addSwipeRightLabel(getString(R.string.message_label))
-                    .setSwipeRightLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.light_card_background))
+                    .setSwipeRightLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.card_background))
                     .addCornerRadius(1,32)
                     .addSwipeLeftBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.call_background))
                     .addSwipeLeftActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_call)
                     .addSwipeLeftLabel(getString(R.string.call_label))
-                    .setSwipeLeftLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.light_card_background))
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.card_background))
                     .create()
                     .decorate()
 
@@ -233,7 +234,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchItem = menu?.findItem(R.id.actionSearch)
-        deleteItem = menu?.findItem(R.id.delteItem)
+        deleteItem = menu?.findItem(R.id.deleteItem)
         searchView = searchItem?.actionView as SearchView
 
         searchView.queryHint = getString(R.string.search_view_hint)
@@ -268,13 +269,15 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         } else recyclerViewAdapter.filterList(filteredlist)
     }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.delteItem) {
-            ContactList.removeContact()
-            recyclerViewAdapter.notifyDataSetChanged()
-            ContactList.clearCheckSelection()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.deleteItem -> {
+                ContactList.removeContact()
+                showDeleteActionToolBar = false
+                recyclerViewAdapter.notifyDataSetChanged()
+            }
         }
-        return super.onContextItemSelected(item)
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onItemClick(position: Int, action: Int) {
@@ -282,11 +285,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         when(action) {
             1 -> checkPermissionAndSendIntent(Manifest.permission.CALL_PHONE, REQUEST_PHONE_CALL)
             2 -> checkPermissionAndSendIntent(Manifest.permission.SEND_SMS, REQUEST_SEND_SMS)
+            3 -> showDeleteActionToolBar = false
+            4 -> showDeleteActionToolBar = true
         }
     }
 
     override fun onLongPress(view: View, contact: Contacts, position: Int) {
-        //recyclerViewAdapter.toggleIcon(binding, position)
         showDeleteActionToolBar = true
         Toast.makeText(this, "clicked "+ contact.nameContact, Toast.LENGTH_SHORT).show()
     }

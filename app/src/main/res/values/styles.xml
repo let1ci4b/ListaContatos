@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.App.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
+        <item name="errorEnabled">true</item>
+        <item name="errorTextColor">?attr/colorPrimaryVariant</item>
+        <item name="boxStrokeErrorColor">@color/text_input_error</item>
+        <item name="errorIconTint">@color/text_input_error</item>
+        <item name="boxStrokeColor">@color/stroke_color</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="boxStrokeWidth">0.5dp</item>
+        <item name="boxCornerRadiusBottomEnd">10dp</item>
+        <item name="boxCornerRadiusBottomStart">10dp</item>
+        <item name="boxCornerRadiusTopEnd">10dp</item>
+        <item name="boxCornerRadiusTopStart">10dp</item>
+        <item name="endIconMode">custom</item>
+        <item name="endIconTint">@color/green_icons_background</item>
+        <item name="android:textColorHint">@color/stroke_color</item>
+        <item name="hintEnabled">true</item>
+        <item name="hintTextColor">?attr/colorPrimaryVariant</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="iconTint">@color/stroke_color</item>
+    </style>
+
+    <style name="ThemeOverlay.App.TextInputLayout" parent="">
+        <item name="editTextStyle">@style/Widget.Material3.TextInputEditText.OutlinedBox</item>
+    </style>
+
+</resources>

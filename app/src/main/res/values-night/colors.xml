@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="box_stroke">#FFFFFFFF</color>
+    <color name="card_background">#171717</color>
+    <color name="selected_card_background">#b3171717</color>
+</resources>

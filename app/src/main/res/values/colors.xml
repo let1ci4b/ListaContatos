@@ -10,8 +10,8 @@
     <color name="gray">#888888</color>
     <color name="light_mode_background">#F2F3EF</color>
     <color name="dark_mode_background">#FF000000</color>
-    <color name="light_card_background">#FFFFFFFF</color>
-    <color name="dark_card_background">#171717</color>
+    <color name="card_background">#FFFFFFFF</color>
+    <color name="selected_card_background">#b3FFFFFF</color>
     <color name="call_background">#15B76C</color>
     <color name="message_background">#16ABE3</color>
     <color name="card_icon">#282828</color>

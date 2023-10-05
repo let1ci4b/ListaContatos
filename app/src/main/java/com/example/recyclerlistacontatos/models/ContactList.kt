@@ -3,6 +3,7 @@ package com.example.recyclerlistacontatos.models
 object ContactList {
 
     private var contactList = arrayListOf<Contacts>()
+    var isOnDeleteMode: Boolean = false
 
     fun addContact(contact: Contacts){
         contactList.add(contact)
@@ -35,7 +36,7 @@ object ContactList {
     }
 
     fun setupCheck(position: Int) {
-        contactList[position].isChecked = true
+        contactList[position].isChecked = !(contactList[position].isChecked)
     }
 
     fun clearCheckSelection() {
@@ -45,8 +46,7 @@ object ContactList {
     }
 
     fun selectedItemsCount() : Int {
-        /// TODO create function
-        return 0
+        return contactList.filter { it.isChecked }.size
     }
 }
 

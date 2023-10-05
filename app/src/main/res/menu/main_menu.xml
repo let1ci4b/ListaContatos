@@ -11,10 +11,24 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <item
-        android:id="@+id/delteItem"
+        android:id="@+id/deleteItem"
         android:icon="@drawable/ic_delete"
         android:orderInCategory="100"
         android:title="Delete"
+        app:showAsAction="always"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/selectAll"
+        android:icon="@drawable/ic_select"
+        android:title="Select All"
+        app:showAsAction="always"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/allSelected"
+        android:icon="@drawable/ic_selected"
+        android:title="All Selected"
         app:showAsAction="always"
         android:visible="false" />
 
