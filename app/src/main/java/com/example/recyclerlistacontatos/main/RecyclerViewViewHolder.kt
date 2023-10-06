@@ -49,8 +49,7 @@ class RecyclerViewViewHolder(private var binding: ContactCardBinding, private va
                 if(ContactList.isOnDeleteMode) {
                     ContactList.setupCheck(adapterPosition)
                     setupCheckedCardsLayout(contact)
-                    if (ContactList.selectedItemsCount() <= 0) onItemClickListener.onItemClick(adapterPosition, 3)
-                    else onItemClickListener.onItemClick(adapterPosition, 4)
+                    onItemClickListener.onItemClick(adapterPosition, 3)
                 }
                 else expandableCallback?.invoke()
             }

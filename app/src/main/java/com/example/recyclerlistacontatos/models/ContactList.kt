@@ -48,5 +48,11 @@ object ContactList {
     fun selectedItemsCount() : Int {
         return contactList.filter { it.isChecked }.size
     }
+
+    fun selectAll() {
+        for (contact in contactList) {
+            contact.isChecked = true
+        }
+    }
 }
 

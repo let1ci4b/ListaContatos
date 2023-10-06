@@ -20,7 +20,6 @@ class RecyclerViewAdapter(
     ) : RecyclerView.Adapter<RecyclerViewViewHolder>() {
 
     private var expandedPosition: Int? = null
-    var isOnDeleteAction: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewViewHolder {
         val binding = ContactCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)

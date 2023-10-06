@@ -34,27 +34,33 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private lateinit var searchView: SearchView
     private var searchItem: MenuItem? = null
-    private var deleteItem: MenuItem? = null
+    private var selectAllItem: MenuItem? = null
+    private var allSelectedItem: MenuItem? = null
     private var itemViewPosition: Int = 0
     var REQUEST_PHONE_CALL = 1
     var REQUEST_SEND_SMS = 2
 
     /// TODO implement app default text font
-    /// TODO fix toolbar font size
-    /// TODO refactor XML layouts using style
     /// TODO search for hardcoded strings in code
     /// TODO adjust cardview border on swipe
     /// TODO refactor "no contacts warning" (png to svg vector)
-    /// TODO actualize "no contacts warning" when recycler is empty
-    // todo implement search bar using AutoCompleteTextView
-    /// todo add snackbar for undo remove option
+    /// TODO implement search bar using AutoCompleteTextView
+    /// TODO add snackbar for undo remove option
+    /// TODO fix card selection during search (array position conflict)
+    /// TODO order list by alphabetic order
+    /// TODO forbid user to give enters (name input text)
+    /// TODO change buttons style
+    /// TODO replace cancel button comportment
+    /// TODO implement dialogs
+    /// TODO implement splash screen
 
-    private var showDeleteActionToolBar : Boolean = false
+    private var isDeleteModeOn : Boolean = false
         set(value) {
-            if(value) changeToolBarToDeleteAction()
-            else resetDefaultToolbar()
+            if(value) setupDeleteMode()
+            else resetDefaultMode()
             field = value
         }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainLayoutBinding.inflate(layoutInflater)
@@ -66,22 +72,31 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         showNoContactsWarning()
     }
 
-    private fun changeToolBarToDeleteAction() {
-        searchView.visibility = View.GONE
-        searchItem?.isVisible = false
-        deleteItem?.isVisible = true
-        //supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.title = "${ContactList.selectedItemsCount()} selecionados"
-        //supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.green_icons_background)))
+    private fun setupDeleteMode() {
+        with(binding) {
+            if (ContactList.selectedItemsCount() == ContactList.listSize()) {
+                selectAllItem?.isVisible = false
+                allSelectedItem?.isVisible = true
+            } else {
+                selectAllItem?.isVisible = true
+                allSelectedItem?.isVisible = false
+            }
+            bottomBar.visibility = View.VISIBLE
+            bottomBarTitle.visibility = View.VISIBLE
+            bottomBarTitle.text = "${ContactList.selectedItemsCount()} selecionados"
+        }
     }
 
-    private fun resetDefaultToolbar() {
-        setSupportActionBar(binding.mainToolbar.mainToolbar)
-        //supportActionBar?.setBackgroundDrawable(resources.getDrawable(R.drawable.toolbar_background))
-        ContactList.isOnDeleteMode = false
-        ContactList.clearCheckSelection()
-        supportActionBar?.title = "Contatos"
-        supportActionBar?.setDisplayShowTitleEnabled(true)
+    private fun resetDefaultMode() {
+        with(binding) {
+            ContactList.isOnDeleteMode = false
+            ContactList.clearCheckSelection()
+            selectAllItem?.isVisible = false
+            allSelectedItem?.isVisible = false
+            bottomBar.visibility = View.GONE
+            bottomBarTitle.visibility = View.GONE
+            showNoContactsWarning()
+        }
     }
 
     override fun onPause() {
@@ -128,15 +143,15 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                     actionState,
                     isCurrentlyActive
                 )
-                    .addSwipeRightBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.message_background))
-                    .addSwipeRightActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_message)
+                    .addSwipeRightBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.message_background))
+                    .addSwipeRightActionIcon(R.drawable.ic_message)
                     .addSwipeRightLabel(getString(R.string.message_label))
-                    .setSwipeRightLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.card_background))
+                    .setSwipeRightLabelColor(ContextCompat.getColor(this@MainActivity, R.color.white))
                     .addCornerRadius(1,32)
-                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.call_background))
-                    .addSwipeLeftActionIcon(com.example.recyclerlistacontatos.R.drawable.ic_call)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.call_background))
+                    .addSwipeLeftActionIcon(R.drawable.ic_call)
                     .addSwipeLeftLabel(getString(R.string.call_label))
-                    .setSwipeLeftLabelColor(ContextCompat.getColor(this@MainActivity, com.example.recyclerlistacontatos.R.color.card_background))
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(this@MainActivity, R.color.white))
                     .create()
                     .decorate()
 
@@ -217,7 +232,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         showNoContactsWarning()
         recyclerViewAdapter.filterList(ContactList.getList())
         recyclerViewAdapter.notifyDataSetChanged()
-        showDeleteActionToolBar = false
+        isDeleteModeOn = false
     }
 
     private fun setupListeners() {
@@ -226,16 +241,37 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                 val intent = Intent(this@MainActivity, AddContactActivity::class.java)
                 startActivity(intent)
             }
+            bottomBar.setOnMenuItemClickListener {
+                when(it.itemId) {
+                    R.id.deleteItem -> {
+                        ContactList.removeContact()
+                        isDeleteModeOn = false
+                        recyclerViewAdapter.notifyDataSetChanged()
+                        true
+                    }
+                    R.id.exitItem -> {
+                        isDeleteModeOn = false
+                        recyclerViewAdapter.notifyDataSetChanged()
+                        true
+                    }
+                    else -> false
+                }
+            }
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        //menuInflater.inflate(R.menu.remove_mode_menu, menu)
+        //deleteItem = menu?.findItem(R.id.deleteItem)
+
         menuInflater.inflate(R.menu.main_menu, menu)
+        searchItem = menu?.findItem(R.id.actionSearch)
+        selectAllItem = menu?.findItem(R.id.selectAll)
+        allSelectedItem = menu?.findItem(R.id.allSelected)
+        searchView = searchItem?.actionView as SearchView
 
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchItem = menu?.findItem(R.id.actionSearch)
-        deleteItem = menu?.findItem(R.id.deleteItem)
-        searchView = searchItem?.actionView as SearchView
 
         searchView.queryHint = getString(R.string.search_view_hint)
 
@@ -271,12 +307,20 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.deleteItem -> {
-                ContactList.removeContact()
-                showDeleteActionToolBar = false
-                recyclerViewAdapter.notifyDataSetChanged()
+            R.id.selectAll -> {
+                ContactList.selectAll()
+                selectAllItem?.isVisible = false
+                allSelectedItem?.isVisible = true
+                isDeleteModeOn = true
             }
+            R.id.allSelected -> {
+                ContactList.clearCheckSelection()
+                selectAllItem?.isVisible = true
+                allSelectedItem?.isVisible = false
+                isDeleteModeOn = true
+0            }
         }
+        recyclerViewAdapter.notifyDataSetChanged()
         return super.onOptionsItemSelected(item)
     }
 
@@ -285,13 +329,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         when(action) {
             1 -> checkPermissionAndSendIntent(Manifest.permission.CALL_PHONE, REQUEST_PHONE_CALL)
             2 -> checkPermissionAndSendIntent(Manifest.permission.SEND_SMS, REQUEST_SEND_SMS)
-            3 -> showDeleteActionToolBar = false
-            4 -> showDeleteActionToolBar = true
+            3 -> isDeleteModeOn = true
         }
     }
 
     override fun onLongPress(view: View, contact: Contacts, position: Int) {
-        showDeleteActionToolBar = true
+        isDeleteModeOn = true
         Toast.makeText(this, "clicked "+ contact.nameContact, Toast.LENGTH_SHORT).show()
     }
 }

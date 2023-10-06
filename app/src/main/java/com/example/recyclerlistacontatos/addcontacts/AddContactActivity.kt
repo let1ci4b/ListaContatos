@@ -16,13 +16,6 @@ class AddContactActivity : AppCompatActivity() {
     private var isFieldNameValidated: Boolean = false
     enum class Field { NAME, PHONE }
 
-    /// TODO define default profile pic
-    /// TODO forbid user to give enters (name input text)
-    /// TODO change input icons color when isn't focused
-    /// TODO change buttons style
-    /// TODO replace cancel button comportment
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = AddContactBinding.inflate(layoutInflater)
@@ -33,7 +26,6 @@ class AddContactActivity : AppCompatActivity() {
         setupListeners()
         binding.buttonSave.isEnabled = false
     }
-    /// TODO implement dialogs
     private fun setupListeners() {
         with(binding) {
             buttonCancel.setOnClickListener {
@@ -77,7 +69,6 @@ class AddContactActivity : AppCompatActivity() {
 // builder.show()
 // }
 
-    /// TODO validate inputs filled with spaces
     private fun isFieldValidated(field: Field) {
         with(binding){
             when(field) {

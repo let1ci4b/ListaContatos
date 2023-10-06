@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/exitItem"
+        android:icon="@drawable/ic_close"
+        android:title="Exit"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/deleteItem"
+        android:icon="@drawable/ic_delete"
+        android:orderInCategory="100"
+        android:title="Delete"
+        app:showAsAction="always" />
+
+</menu>

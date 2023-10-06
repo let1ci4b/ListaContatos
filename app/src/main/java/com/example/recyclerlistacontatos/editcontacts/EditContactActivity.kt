@@ -55,7 +55,7 @@ class EditContactActivity : AppCompatActivity() {
             when(field) {
                 Field.NAME -> {
                     fieldContactName.error = null
-                    if(fieldContactName.text?.isEmpty()!!) fieldContactName.error = getString(R.string.empty_name_warning)
+                    if(fieldContactName.text?.isNullOrBlank()!!) fieldContactName.error = getString(R.string.empty_name_warning)
                     isFieldNameValidated = (fieldContactName.error.isNullOrEmpty())
                 }
                 Field.PHONE -> {
