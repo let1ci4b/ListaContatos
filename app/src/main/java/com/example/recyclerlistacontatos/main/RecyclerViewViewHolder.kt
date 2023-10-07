@@ -28,28 +28,28 @@ class RecyclerViewViewHolder(private var binding: ContactCardBinding, private va
         with(binding) {
             buttonEdit.setOnClickListener {
                 val intent = Intent(it.context, EditContactActivity::class.java)
-                intent.putExtra("contact", position)
+                intent.putExtra("contact", ContactList.getContactPosition(contact))
                 it.context.startActivity(intent)
             }
             buttonCall.setOnClickListener {
-                onItemClickListener.onItemClick(adapterPosition, 1)
+                onItemClickListener.onItemClick(ContactList.getContactPosition(contact), 1)
             }
             buttonMessage.setOnClickListener {
-                onItemClickListener.onItemClick(adapterPosition, 2)
+                onItemClickListener.onItemClick(ContactList.getContactPosition(contact), 2)
             }
             unfoldLayout.setOnLongClickListener {
-                ContactList.setupCheck(adapterPosition)
+                ContactList.setupCheck(ContactList.getContactPosition(contact))
                 ContactList.isOnDeleteMode = true
-                onItemClickListener.onLongPress(itemView, ContactList.getContact(adapterPosition), adapterPosition)
+                onItemClickListener.onLongPress(itemView, ContactList.getContact(ContactList.getContactPosition(contact)), ContactList.getContactPosition(contact))
                 setupCheckedCardsLayout(contact)
                 if(isExpanded) expandableCallback?.invoke()
                 return@setOnLongClickListener true
             }
             unfoldLayout.setOnClickListener {
                 if(ContactList.isOnDeleteMode) {
-                    ContactList.setupCheck(adapterPosition)
+                    ContactList.setupCheck(ContactList.getContactPosition(contact))
                     setupCheckedCardsLayout(contact)
-                    onItemClickListener.onItemClick(adapterPosition, 3)
+                    onItemClickListener.onItemClick(ContactList.getContactPosition(contact), 3)
                 }
                 else expandableCallback?.invoke()
             }

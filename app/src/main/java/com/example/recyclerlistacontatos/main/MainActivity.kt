@@ -39,20 +39,20 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     private var itemViewPosition: Int = 0
     var REQUEST_PHONE_CALL = 1
     var REQUEST_SEND_SMS = 2
+    enum class SearchMode { NORESULT, RESULT, NOSEARCH, CLOSED }
 
     /// TODO implement app default text font
     /// TODO search for hardcoded strings in code
     /// TODO adjust cardview border on swipe
-    /// TODO refactor "no contacts warning" (png to svg vector)
     /// TODO implement search bar using AutoCompleteTextView
-    /// TODO add snackbar for undo remove option
-    /// TODO fix card selection during search (array position conflict)
     /// TODO order list by alphabetic order
     /// TODO forbid user to give enters (name input text)
     /// TODO change buttons style
     /// TODO replace cancel button comportment
     /// TODO implement dialogs
-    /// TODO implement splash screen
+    /// TODO fix error when try to delete after realize a search
+    /// TODO diz toolbar menu item that appears on delete mode after close the search bar
+    /// TODO set background on search mode
 
     private var isDeleteModeOn : Boolean = false
         set(value) {
@@ -296,13 +296,35 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         val filteredlist: ArrayList<Contacts> = ArrayList()
 
         for (item in ContactList.getList()) {
-            if (item.nameContact.contains(query!!, ignoreCase = true) || item.numberContact.contains(query!!, ignoreCase = true)) {
+            if (item.nameContact.contains(query!!, ignoreCase = true) || item.numberContact.contains(query, ignoreCase = true)) {
                 filteredlist.add(item)
+
             }
         }
-        if (filteredlist.isEmpty()) {
-            Toast.makeText(this, getString(R.string.no_result_on_search), Toast.LENGTH_SHORT).show()
-        } else recyclerViewAdapter.filterList(filteredlist)
+        if (filteredlist.isEmpty()) setupOnSearchModeBackground(SearchMode.NORESULT)
+        else recyclerViewAdapter.filterList(filteredlist)
+    }
+
+    private fun setupOnSearchModeBackground(searchModeAction : SearchMode) {
+        with(binding) {
+            when(searchModeAction) {
+                SearchMode.NORESULT -> {
+                    noContactsWarning.text = "Sem resultados."
+                    recyclerView.visibility = View.GONE
+                }
+                SearchMode.NOSEARCH -> {
+                    noContactsWarning.visibility = View.VISIBLE
+                    iconNoContactWarning.visibility = View.GONE
+                    noContactsWarning.text = "Sem buscas recentes"
+                    recyclerView.visibility = View.GONE
+                }
+                SearchMode.RESULT -> {
+                    recyclerView.visibility = View.VISIBLE
+                    noContactsWarning.visibility = View.GONE
+                }
+                else -> false
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -318,7 +340,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                 selectAllItem?.isVisible = true
                 allSelectedItem?.isVisible = false
                 isDeleteModeOn = true
-0            }
+            }
+            R.id.actionSearch -> {
+                setupOnSearchModeBackground(SearchMode.NOSEARCH)
+            }
         }
         recyclerViewAdapter.notifyDataSetChanged()
         return super.onOptionsItemSelected(item)

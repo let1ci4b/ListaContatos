@@ -54,5 +54,9 @@ object ContactList {
             contact.isChecked = true
         }
     }
+
+    fun getContactPosition(contact: Contacts) : Int {
+        return contactList.indexOf(contact)
+    }
 }
 

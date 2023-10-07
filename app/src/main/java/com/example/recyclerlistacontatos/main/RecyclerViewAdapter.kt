@@ -14,10 +14,10 @@ import com.example.recyclerlistacontatos.models.Contacts
 
 
 class RecyclerViewAdapter(
-    private var contactsList : ArrayList<Contacts>,
+    private var contactsList: ArrayList<Contacts>,
     private val recyclerView: RecyclerView,
     private val onItemClickListener: OnItemClick,
-    ) : RecyclerView.Adapter<RecyclerViewViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewViewHolder>() {
 
     private var expandedPosition: Int? = null
 
@@ -26,6 +26,7 @@ class RecyclerViewAdapter(
         return RecyclerViewViewHolder(binding, onItemClickListener)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun filterList(filterlist: ArrayList<Contacts>) {
         contactsList = filterlist
         notifyDataSetChanged()
@@ -38,9 +39,6 @@ class RecyclerViewAdapter(
             expandedPosition?.let { (recyclerView.findViewHolderForAdapterPosition(it) as? RecyclerViewViewHolder)?.bind(contactsList[it], false, null) }
             expandedPosition = if (expandedPosition != holder.adapterPosition) holder.adapterPosition else null
             notifyDataSetChanged()
-
-
-
         }
     }
 
@@ -62,4 +60,4 @@ class RecyclerViewAdapter(
 
     }
 
-    }
+}
