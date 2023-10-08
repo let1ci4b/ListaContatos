@@ -1,15 +1,12 @@
 package com.example.recyclerlistacontatos.main
 
 import android.annotation.SuppressLint
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.util.contains
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.databinding.ContactCardBinding
-import com.example.recyclerlistacontatos.models.ContactList
 import com.example.recyclerlistacontatos.models.Contacts
 
 
@@ -59,5 +56,4 @@ class RecyclerViewAdapter(
         fun onLongPress(view: View, contact: Contacts, position: Int)
 
     }
-
 }

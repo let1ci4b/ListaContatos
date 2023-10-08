@@ -1,11 +1,9 @@
 package com.example.recyclerlistacontatos.main
 
 import android.content.Intent
-import android.graphics.Color
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.ContactCardBinding
 import com.example.recyclerlistacontatos.editcontacts.EditContactActivity
 import com.example.recyclerlistacontatos.models.ContactList

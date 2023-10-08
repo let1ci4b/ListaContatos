@@ -29,10 +29,17 @@ object ContactList {
         return contactList
     }
 
-    fun phoneExist(phone: String, position: Int?): Boolean {
+    fun phoneExist(phone: String, position: Int?) : Boolean {
         return position?.let {
             contactList.any { it.numberContact == phone && phone != contactList[position].numberContact }
         } ?: contactList.any { it.numberContact == phone }
+    }
+
+    fun isContactUnchanged(name: String, phone: String, position: Int?) : Boolean {
+        return position?.let {
+            contactList.any { contactList[position].numberContact == phone }
+                    && contactList.any { contactList[position].nameContact == name }
+        }!!
     }
 
     fun setupCheck(position: Int) {

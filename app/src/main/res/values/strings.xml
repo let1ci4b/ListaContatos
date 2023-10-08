@@ -14,10 +14,16 @@
     <string name="unsaved_alterations_warning">"Alterações não salvas."</string>
     <string name="added_contact_warning">"foi adicionado(a) com sucesso!"</string>
     <string name="duplicated_contact_warning">Esse número já está na lista.</string>
-    <string name="edited_contact_warning">"foi editado(a) com sucesso!"</string>
-    <string name="permission_denied">"Permissão negada"</string>
-    <string name="no_result_on_search">"Sem resultados..."</string>
-    <string name="search_view_hint">"Pesquisar"</string>
-    <string name="message_label">"Mensagem"</string>
-    <string name="call_label">"Chamar"</string>
+    <string name="edited_contact_warning">foi editado(a) com sucesso!</string>
+    <string name="permission_denied">Permissão negada</string>
+    <string name="no_result_on_search">Sem resultados...</string>
+    <string name="search_view_hint">Pesquisar</string>
+    <string name="message_label">Mensagem</string>
+    <string name="call_label">Chamar</string>
+    <string name="bottom_bar_text">" Selecionados"</string>
+    <string name="tollbar_addcontact_title">Novo contato</string>
+    <string name="tollbar_editcontact_title">Editar contato</string>
+    <string name="cancel_dialog_message">Tem certeza que deseja descartar suas alterações?</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
 </resources>

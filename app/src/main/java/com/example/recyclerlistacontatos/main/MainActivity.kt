@@ -32,27 +32,22 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
-    private lateinit var searchView: SearchView
+    lateinit var searchView: SearchView
     private var searchItem: MenuItem? = null
     private var selectAllItem: MenuItem? = null
     private var allSelectedItem: MenuItem? = null
     private var itemViewPosition: Int = 0
     var REQUEST_PHONE_CALL = 1
     var REQUEST_SEND_SMS = 2
-    enum class SearchMode { NORESULT, RESULT, NOSEARCH, CLOSED }
+    enum class SearchMode { NORESULT, RESULT}
 
     /// TODO implement app default text font
-    /// TODO search for hardcoded strings in code
     /// TODO adjust cardview border on swipe
-    /// TODO implement search bar using AutoCompleteTextView
     /// TODO order list by alphabetic order
     /// TODO forbid user to give enters (name input text)
-    /// TODO change buttons style
-    /// TODO replace cancel button comportment
-    /// TODO implement dialogs
     /// TODO fix error when try to delete after realize a search
-    /// TODO diz toolbar menu item that appears on delete mode after close the search bar
-    /// TODO set background on search mode
+    /// TODO refactor xml layouts with styles
+    /// TODO fix toolbar menu item that appears on delete mode after close the search bar
 
     private var isDeleteModeOn : Boolean = false
         set(value) {
@@ -83,7 +78,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
             }
             bottomBar.visibility = View.VISIBLE
             bottomBarTitle.visibility = View.VISIBLE
-            bottomBarTitle.text = "${ContactList.selectedItemsCount()} selecionados"
+            bottomBarTitle.text = ContactList.selectedItemsCount().toString().plus(getString(R.string.bottom_bar_text))
         }
     }
 
@@ -208,10 +203,14 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when(requestCode) {
             1 -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) sendIntent(Intent.ACTION_CALL, "tel: ${ContactList.getContact(itemViewPosition).numberContact}")
-            else Toast.makeText(this@MainActivity, getString(R.string.permission_denied), Toast.LENGTH_LONG).show()
+            else printPermissionDeniedTextOnScreen()
             2 -> if(grantResults[0]== PackageManager.PERMISSION_GRANTED) sendIntent(Intent.ACTION_SENDTO, "smsto: ${ContactList.getContact(itemViewPosition).numberContact}")
-            else Toast.makeText(this@MainActivity, getString(R.string.permission_denied), Toast.LENGTH_LONG).show()
+            else printPermissionDeniedTextOnScreen()
         }
+    }
+
+    private fun printPermissionDeniedTextOnScreen() {
+        Toast.makeText(this@MainActivity, getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
     }
 
     private fun showNoContactsWarning() {
@@ -261,20 +260,14 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-
-        //menuInflater.inflate(R.menu.remove_mode_menu, menu)
-        //deleteItem = menu?.findItem(R.id.deleteItem)
-
         menuInflater.inflate(R.menu.main_menu, menu)
         searchItem = menu?.findItem(R.id.actionSearch)
         selectAllItem = menu?.findItem(R.id.selectAll)
         allSelectedItem = menu?.findItem(R.id.allSelected)
         searchView = searchItem?.actionView as SearchView
-
-        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-
         searchView.queryHint = getString(R.string.search_view_hint)
 
+        val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -282,13 +275,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                 searchView.clearFocus()
                 return true
             }
-
             override fun onQueryTextChange(newText: String?): Boolean {
                 filter(newText)
                 return false
             }
         })
-
         return true
     }
 
@@ -298,31 +289,33 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
         for (item in ContactList.getList()) {
             if (item.nameContact.contains(query!!, ignoreCase = true) || item.numberContact.contains(query, ignoreCase = true)) {
                 filteredlist.add(item)
-
             }
         }
-        if (filteredlist.isEmpty()) setupOnSearchModeBackground(SearchMode.NORESULT)
-        else recyclerViewAdapter.filterList(filteredlist)
+
+        if(filteredlist.isEmpty() && !query?.isEmpty()!!) setupOnSearchModeBackground(SearchMode.NORESULT)
+        else {
+            recyclerViewAdapter.filterList(filteredlist)
+            setupOnSearchModeBackground(SearchMode.RESULT)
+        }
     }
 
     private fun setupOnSearchModeBackground(searchModeAction : SearchMode) {
         with(binding) {
-            when(searchModeAction) {
-                SearchMode.NORESULT -> {
-                    noContactsWarning.text = "Sem resultados."
-                    recyclerView.visibility = View.GONE
+            if(ContactList.listSize() == 0) showNoContactsWarning()
+            else {
+                when(searchModeAction) {
+                    SearchMode.NORESULT -> {
+                        noContactsWarning.visibility = View.VISIBLE
+                        iconNoContactWarning.visibility = View.GONE
+                        noContactsWarning.text = "Sem resultados."
+                        recyclerView.visibility = View.GONE
+                    }
+                    SearchMode.RESULT -> {
+                        iconNoContactWarning.visibility = View.GONE
+                        noContactsWarning.visibility = View.GONE
+                        recyclerView.visibility = View.VISIBLE
+                    }
                 }
-                SearchMode.NOSEARCH -> {
-                    noContactsWarning.visibility = View.VISIBLE
-                    iconNoContactWarning.visibility = View.GONE
-                    noContactsWarning.text = "Sem buscas recentes"
-                    recyclerView.visibility = View.GONE
-                }
-                SearchMode.RESULT -> {
-                    recyclerView.visibility = View.VISIBLE
-                    noContactsWarning.visibility = View.GONE
-                }
-                else -> false
             }
         }
     }
@@ -341,9 +334,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                 allSelectedItem?.isVisible = false
                 isDeleteModeOn = true
             }
-            R.id.actionSearch -> {
-                setupOnSearchModeBackground(SearchMode.NOSEARCH)
-            }
         }
         recyclerViewAdapter.notifyDataSetChanged()
         return super.onOptionsItemSelected(item)
@@ -360,6 +350,5 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
 
     override fun onLongPress(view: View, contact: Contacts, position: Int) {
         isDeleteModeOn = true
-        Toast.makeText(this, "clicked "+ contact.nameContact, Toast.LENGTH_SHORT).show()
     }
 }

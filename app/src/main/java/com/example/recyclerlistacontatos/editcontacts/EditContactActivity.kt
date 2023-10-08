@@ -2,6 +2,7 @@ package com.example.recyclerlistacontatos.editcontacts
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
@@ -23,8 +24,9 @@ class EditContactActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.mainToolbar.mainToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        title = getString(R.string.tollbar_editcontact_title)
         position = intent.extras?.getInt("contact") as Int
+        binding.buttonSave.isEnabled = false
         setupListeners()
         setupFields()
     }
@@ -32,21 +34,18 @@ class EditContactActivity : AppCompatActivity() {
     private fun setupListeners() {
         with(binding) {
             buttonCancel.setOnClickListener {
-                finish()
+                if(ContactList.isContactUnchanged(fieldContactName.text.toString(), fieldContactPhone.text.toString(), position)) finish()
+                else showCancelDialog()
             }
-
             buttonSave.setOnClickListener {
                 updateContactInformation()
             }
-
             fieldContactName.doOnTextChanged { text, start, before, count ->
                 isFieldValidated(Field.NAME)
             }
-
             fieldContactPhone.doOnTextChanged { text, start, before, count ->
                 isFieldValidated(Field.PHONE)
             }
-
         }
     }
 
@@ -54,15 +53,16 @@ class EditContactActivity : AppCompatActivity() {
         with(binding){
             when(field) {
                 Field.NAME -> {
-                    fieldContactName.error = null
-                    if(fieldContactName.text?.isNullOrBlank()!!) fieldContactName.error = getString(R.string.empty_name_warning)
-                    isFieldNameValidated = (fieldContactName.error.isNullOrEmpty())
+                    if(fieldContactName.text.toString().isBlank()) layoutContactName.error = getString(R.string.empty_name_warning)
+                    else layoutContactName.error = null
+                    isFieldNameValidated = (layoutContactName.error.isNullOrEmpty())
+
                 }
                 Field.PHONE -> {
-                    fieldContactPhone.error = null
-                    if(!fieldContactPhone.text?.isDigitsOnly()!!) fieldContactPhone.error = getString(R.string.incorrect_phone_format_warning)
-                    else if(fieldContactPhone.text.toString().length != 11) fieldContactPhone.error = getString(R.string.incorrect_phone_size_warning)
-                    isFieldPhoneValidated = (fieldContactPhone.error.isNullOrEmpty())
+                    if(!fieldContactPhone.text?.toString()?.isDigitsOnly()!!) layoutContactPhone.error = getString(R.string.incorrect_phone_format_warning)
+                    else if(fieldContactPhone.text?.toString()?.length != 11) layoutContactPhone.error = getString(R.string.incorrect_phone_size_warning)
+                    else layoutContactPhone.error = null
+                    isFieldPhoneValidated = (layoutContactPhone.error.isNullOrEmpty())
                 }
             }
             buttonSave()
@@ -70,8 +70,13 @@ class EditContactActivity : AppCompatActivity() {
     }
 
     private fun buttonSave() {
-        binding.buttonSave.isEnabled = isFieldNameValidated && isFieldPhoneValidated
+        with(binding) {
+            binding.buttonSave.isEnabled = isFieldNameValidated
+                                        && isFieldPhoneValidated
+                                        && !ContactList.isContactUnchanged(fieldContactName.text.toString(), fieldContactPhone.text.toString(), position)
+        }
     }
+
     private fun setupFields() {
         with(binding) {
             val (titleImage, name, number) = ContactList.getContact(position)
@@ -99,5 +104,22 @@ class EditContactActivity : AppCompatActivity() {
 
     private fun printTextOnScreen(warning: String) {
         Toast.makeText(this@EditContactActivity, warning, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showCancelDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.button_cancel))
+            .setMessage(getString(R.string.cancel_dialog_message))
+            .setPositiveButton(getString(R.string.yes)){dialog, witch ->
+                finish()
+                printTextOnScreen(getString(R.string.unsaved_alterations_warning))
+            }
+            .setNegativeButton(getString(R.string.no)){dialog, witch ->
+                dialog.dismiss()
+            }
+        val alertDialog : AlertDialog = builder.create()
+        alertDialog.show()
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.box_stroke))
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.box_stroke))
     }
 }

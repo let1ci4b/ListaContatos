@@ -1,5 +1,4 @@
 package com.example.recyclerlistacontatos.addcontacts
-import android.content.DialogInterface
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -22,17 +21,15 @@ class AddContactActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.mainToolbar.mainToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = "Novo Contato"
-        setupListeners()
+        title = getString(R.string.tollbar_addcontact_title)
         binding.buttonSave.isEnabled = false
+        setupListeners()
     }
     private fun setupListeners() {
         with(binding) {
             buttonCancel.setOnClickListener {
-                finish()
-// setupOnCancelDialog()
-                printTextOnScreen(getString(R.string.unsaved_alterations_warning))
-
+                if(fieldContactName.text.isNullOrEmpty() && fieldContactPhone.text.isNullOrEmpty()) finish()
+                else showCancelDialog()
             }
             buttonSave.setOnClickListener {
                 saveNewContact()
@@ -45,54 +42,22 @@ class AddContactActivity : AppCompatActivity() {
             }
         }
     }
-// private fun setupOnCancelDialog() {
-// val builder = AlertDialog.Builder(this)
-// builder.setTitle("Androidly Alert")
-// builder.setMessage("We have a message")
-
-// builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
-//
-// builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-// Toast.makeText(applicationContext,
-// android.R.string.yes, Toast.LENGTH_SHORT).show()
-// }
-//
-// builder.setNegativeButton(android.R.string.no) { dialog, which ->
-    // Toast.makeText(applicationContext,
-// android.R.string.no, Toast.LENGTH_SHORT).show()
-// }
-//
-// builder.setNeutralButton("Maybe") { dialog, which ->
-// Toast.makeText(applicationContext,
-// "Maybe", Toast.LENGTH_SHORT).show()
-// }
-// builder.show()
-// }
-
     private fun isFieldValidated(field: Field) {
         with(binding){
             when(field) {
                 Field.NAME -> {
-                    fieldContactName.error = null
-                    if(fieldContactName.text.toString().isNullOrBlank()) {
-                        layoutContactName.isErrorEnabled = true
-                        layoutContactName.error = getString(R.string.empty_name_warning)
-                    }
+                    if(fieldContactName.text.toString().isBlank()) layoutContactName.error = getString(R.string.empty_name_warning)
                     else layoutContactName.error = null
                     isFieldNameValidated = (layoutContactName.error.isNullOrEmpty())
 
                 }
                 Field.PHONE -> {
-                    fieldContactPhone.error = null
                     if(!fieldContactPhone.text?.toString()?.isDigitsOnly()!!) layoutContactPhone.error = getString(R.string.incorrect_phone_format_warning)
-                    else if(fieldContactPhone.text?.toString()?.length != 11) {
-                        layoutContactPhone.error = getString(R.string.incorrect_phone_size_warning)
-                    }
+                    else if(fieldContactPhone.text?.toString()?.length != 11) layoutContactPhone.error = getString(R.string.incorrect_phone_size_warning)
                     else layoutContactPhone.error = null
                     isFieldPhoneValidated = (layoutContactPhone.error.isNullOrEmpty())
                 }
             }
-
             buttonSave()
         }
     }
@@ -114,5 +79,22 @@ class AddContactActivity : AppCompatActivity() {
     }
     private fun printTextOnScreen(warning: String) {
         Toast.makeText(this@AddContactActivity, warning, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showCancelDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.button_cancel))
+            .setMessage(getString(R.string.cancel_dialog_message))
+            .setPositiveButton(getString(R.string.yes)){dialog, witch ->
+                finish()
+                printTextOnScreen(getString(R.string.unsaved_alterations_warning))
+            }
+            .setNegativeButton(getString(R.string.no)){dialog, witch ->
+                dialog.dismiss()
+            }
+        val alertDialog : AlertDialog = builder.create()
+        alertDialog.show()
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.box_stroke))
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.box_stroke))
     }
 }
