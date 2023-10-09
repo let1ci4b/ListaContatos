@@ -24,4 +24,5 @@
     <string name="cancel_dialog_message">Tem certeza que deseja descartar suas alterações?</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="search_view_default_warning">Realize uma busca.</string>
 </resources>

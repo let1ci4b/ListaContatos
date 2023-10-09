@@ -321,7 +321,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                 SearchMode.NOSEARCH -> {
                     noContactsWarning.visibility = View.VISIBLE
                     iconNoContactWarning.visibility = View.GONE
-                    noContactsWarning.text = "Realize uma busca."
+                    noContactsWarning.text = getString(R.string.search_view_default_warning)
                     recyclerView.visibility = View.GONE
                 }
                 SearchMode.ONSEARCH -> {
@@ -331,7 +331,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                     searchViewQuery.text = null
                 }
                 SearchMode.ONEXIT -> {
-                    title = "Contatos"
+                    title = getString(R.string.app_name)
                     searchIcon.visibility = View.VISIBLE
                     searchBar.visibility = View.GONE
                     noContactsWarning.visibility = View.GONE
