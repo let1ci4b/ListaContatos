@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/toolbar_background"
-    app:titleTextAppearance="@style/Toolbar.TitleText">
+    app:titleTextAppearance="@style/Toolbar.TitleText" >
 
 
 </androidx.appcompat.widget.Toolbar>

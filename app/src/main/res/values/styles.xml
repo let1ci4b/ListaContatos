@@ -31,4 +31,10 @@
         <item name="android:actionBarSize">10dp</item>1
     </style>
 
+    <style name="TextInputEditText" parent="">
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
+        <item name="android:textColorHint">?attr/colorSecondaryVariant</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

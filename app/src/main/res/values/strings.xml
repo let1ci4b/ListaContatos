@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Contatos</string>
-    <string name="add_contact_name">Novo contato</string>
-    <string name="edit_contact_name">Editar contato</string>
     <string name="field_name">Nome</string>
     <string name="field_phone">Telefone</string>
     <string name="button_save">Salvar</string>
@@ -11,12 +9,12 @@
     <string name="empty_name_warning">Insira um nome.</string>
     <string name="incorrect_phone_size_warning">Telefone deve conter 11 dígitos.</string>
     <string name="incorrect_phone_format_warning">Insira apenas números.</string>
-    <string name="unsaved_alterations_warning">"Alterações não salvas."</string>
-    <string name="added_contact_warning">"foi adicionado(a) com sucesso!"</string>
+    <string name="unsaved_alterations_warning">Alterações não salvas.</string>
+    <string name="added_contact_warning">" foi adicionado(a) com sucesso!"</string>
     <string name="duplicated_contact_warning">Esse número já está na lista.</string>
-    <string name="edited_contact_warning">foi editado(a) com sucesso!</string>
-    <string name="permission_denied">Permissão negada</string>
-    <string name="no_result_on_search">Sem resultados...</string>
+    <string name="edited_contact_warning">" foi editado(a) com sucesso!"</string>
+    <string name="permission_denied">Permissão negada.</string>
+    <string name="no_result_on_search">Sem resultados.</string>
     <string name="search_view_hint">Pesquisar</string>
     <string name="message_label">Mensagem</string>
     <string name="call_label">Chamar</string>
