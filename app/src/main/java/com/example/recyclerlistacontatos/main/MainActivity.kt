@@ -37,10 +37,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     /// TODO implement app default text font
     /// TODO adjust cardview border on swipe
     /// TODO order list by alphabetic order
-    /// TODO change searchView animation
     /// TODO capture on back pressed reference on searchView
     /// TODO fix select all cards error on delete mode
-    /// TODO show keyboard when searchView is open
+    /// TODO hide keyboard on searchView exit
 
     private var isDeleteModeOn : Boolean = false
         set(value) {
@@ -248,14 +247,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                         isDeleteModeOn = false
                         recyclerViewAdapter.notifyDataSetChanged()
                         setupOnSearchModeBackground(SearchMode.ONEXIT)
-                        showNoContactsWarning()
-                        UIUtil.hideKeyboard(this@MainActivity)
                         true
                     }
                     R.id.exitItem -> {
                         isDeleteModeOn = false
                         recyclerViewAdapter.notifyDataSetChanged()
-                        UIUtil.hideKeyboard(this@MainActivity)
                         true
                     }
                     else -> false
@@ -282,7 +278,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
             searchIcon.setOnClickListener {
                 setupOnSearchModeBackground(SearchMode.ONSEARCH)
                 setupOnSearchModeBackground(SearchMode.NOSEARCH)
-                //UIUtil.showKeyboard(this@MainActivity, searchViewQuery)
+                searchViewQuery.requestFocus()
+                UIUtil.showKeyboard(this@MainActivity, searchViewQuery)
             }
         }
     }
@@ -309,12 +306,10 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
             when (searchModeAction) {
                 SearchMode.NORESULT -> {
                     noContactsWarning.visibility = View.VISIBLE
-                    iconNoContactWarning.visibility = View.GONE
                     noContactsWarning.text = getString(R.string.no_result_on_search)
                     recyclerView.visibility = View.GONE
                 }
                 SearchMode.RESULT -> {
-                    iconNoContactWarning.visibility = View.GONE
                     noContactsWarning.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
                 }
@@ -338,6 +333,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                     recyclerView.visibility = View.VISIBLE
                     recyclerViewAdapter.filterList(ContactList.getList())
                     showNoContactsWarning()
+                    //searchViewQuery.clearFocus()
+                    //UIUtil.hideKeyboard(this@MainActivity)
                 }
             }
         }
