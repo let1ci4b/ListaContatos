@@ -1,4 +1,6 @@
-package com.example.recyclerlistacontatos.models
+package com.example.recyclerlistacontatos.contactsList
+
+import com.example.recyclerlistacontatos.models.Contacts
 
 object ContactList {
 

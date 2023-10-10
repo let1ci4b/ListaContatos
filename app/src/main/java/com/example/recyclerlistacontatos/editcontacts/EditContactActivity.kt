@@ -8,10 +8,11 @@ import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.EditContactBinding
-import com.example.recyclerlistacontatos.models.ContactList
+import com.example.recyclerlistacontatos.contactsList.ContactList
+import com.example.recyclerlistacontatos.models.ConfirmationDialog
 import com.example.recyclerlistacontatos.models.Contacts
 
-class EditContactActivity : AppCompatActivity() {
+class EditContactActivity : AppCompatActivity() , ConfirmationDialog.ConfirmationDialogListener {
     private lateinit var binding: EditContactBinding
     private var position: Int = 0
     private var isFieldPhoneValidated: Boolean = false
@@ -22,20 +23,26 @@ class EditContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = EditContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.mainToolbar.mainToolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = getString(R.string.tollbar_editcontact_title)
         position = intent.extras?.getInt("contact") as Int
         binding.buttonSave.isEnabled = false
+        setupToolbar()
         setupListeners()
         setupFields()
     }
 
+    private fun setupToolbar() {
+        setSupportActionBar(binding.mainToolbar.mainToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        title = getString(R.string.tollbar_editcontact_title)
+    }
+
     private fun setupListeners() {
         with(binding) {
+            mainToolbar.mainToolbar.setNavigationOnClickListener {
+                returnToMainActivity()
+            }
             buttonCancel.setOnClickListener {
-                if(ContactList.isContactUnchanged(fieldContactName.text.toString(), fieldContactPhone.text.toString(), position)) finish()
-                else showCancelDialog()
+                returnToMainActivity()
             }
             buttonSave.setOnClickListener {
                 updateContactInformation()
@@ -46,6 +53,14 @@ class EditContactActivity : AppCompatActivity() {
             fieldContactPhone.doOnTextChanged { text, start, before, count ->
                 isFieldValidated(Field.PHONE)
             }
+
+        }
+    }
+
+    private fun returnToMainActivity() {
+        with(binding) {
+            if (ContactList.isContactUnchanged(fieldContactName.text.toString(), fieldContactPhone.text.toString(), position)) finish()
+            else showCancelDialog()
         }
     }
 
@@ -107,19 +122,18 @@ class EditContactActivity : AppCompatActivity() {
     }
 
     private fun showCancelDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.button_cancel))
-            .setMessage(getString(R.string.cancel_dialog_message))
-            .setPositiveButton(getString(R.string.yes)){dialog, witch ->
-                finish()
-                printTextOnScreen(getString(R.string.unsaved_alterations_warning))
-            }
-            .setNegativeButton(getString(R.string.no)){dialog, witch ->
-                dialog.dismiss()
-            }
-        val alertDialog : AlertDialog = builder.create()
-        alertDialog.show()
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.box_stroke))
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.box_stroke))
+        val dialog = ConfirmationDialog.newInstance(R.string.button_cancel, R.string.cancel_dialog_message, R.string.button_save, R.string.button_discard, R.string.button_cancel)
+        dialog.show(supportFragmentManager, ConfirmationDialog.TAG)
     }
+
+    override fun onPositiveButtonClicked() {
+        updateContactInformation()
+    }
+
+    override fun onNegativeButtonClicked() {
+        finish()
+        printTextOnScreen(getString(R.string.unsaved_alterations_warning))
+    }
+
+    override fun onNeutralButtonClicked() {}
 }

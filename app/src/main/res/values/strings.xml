@@ -4,6 +4,8 @@
     <string name="field_phone">Telefone</string>
     <string name="button_save">Salvar</string>
     <string name="button_cancel">Cancelar</string>
+    <string name="button_discard">Descartar</string>
+    <string name="button_delete">Excluir</string>
     <string name="main_activity_title">Meus contatos</string>
     <string name="no_contact_warning">Você não possui contatos.\nClique aqui para adicionar!</string>
     <string name="empty_name_warning">Insira um nome.</string>
@@ -21,8 +23,8 @@
     <string name="bottom_bar_text">" Selecionados"</string>
     <string name="tollbar_addcontact_title">Novo contato</string>
     <string name="tollbar_editcontact_title">Editar contato</string>
-    <string name="cancel_dialog_message">Tem certeza que deseja descartar suas alterações?</string>
-    <string name="yes">Sim</string>
-    <string name="no">Não</string>
+    <string name="cancel_dialog_message">Deseja mesmo descartar suas alterações?</string>
+    <string name="remove_items_dialog_title">Deseja remover o(s) contato(s) selecionado(s)?</string>
+    <string name="remove_items_dialog_message">Este contato será removido de sua Lista de Contatos permanentemente, não sendo possível recuperar suas informações.</string>
     <string name="search_view_default_warning">Realize uma busca.</string>
 </resources>

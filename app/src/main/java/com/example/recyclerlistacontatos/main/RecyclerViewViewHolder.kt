@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.databinding.ContactCardBinding
 import com.example.recyclerlistacontatos.editcontacts.EditContactActivity
-import com.example.recyclerlistacontatos.models.ContactList
+import com.example.recyclerlistacontatos.contactsList.ContactList
 import com.example.recyclerlistacontatos.models.Contacts
 
 class RecyclerViewViewHolder(private var binding: ContactCardBinding, private val onItemClickListener: RecyclerViewAdapter.OnItemClick) : RecyclerView.ViewHolder(binding.root) {

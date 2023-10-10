@@ -19,14 +19,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.addcontacts.AddContactActivity
 import com.example.recyclerlistacontatos.databinding.MainLayoutBinding
-import com.example.recyclerlistacontatos.models.ContactList
+import com.example.recyclerlistacontatos.contactsList.ContactList
+import com.example.recyclerlistacontatos.models.ConfirmationDialog
 import com.example.recyclerlistacontatos.models.Contacts
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil
 
 
 @Suppress("DEPRECATION")
-class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
+class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick, ConfirmationDialog.ConfirmationDialogListener {
     private lateinit var binding: MainLayoutBinding
     private lateinit var recyclerViewAdapter: RecyclerViewAdapter
     private var itemViewPosition: Int = 0
@@ -34,11 +35,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     var REQUEST_SEND_SMS = 2
     enum class SearchMode { NOSEARCH, NORESULT, RESULT, ONSEARCH, ONEXIT }
 
-    /// TODO implement app default text font
     /// TODO adjust cardview border on swipe
     /// TODO order list by alphabetic order
     /// TODO capture on back pressed reference on searchView
     /// TODO fix select all cards error on delete mode
+    /// TODO implement dialog on delete mode -> validate buttons quantity
 
     private var isDeleteModeOn : Boolean = false
         set(value) {
@@ -242,10 +243,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
             bottomBar.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.deleteItem -> {
-                        ContactList.removeContact()
-                        isDeleteModeOn = false
-                        recyclerViewAdapter.notifyDataSetChanged()
-                        setupOnSearchModeBackground(SearchMode.ONEXIT)
+                        if(ContactList.selectedItemsCount() > 0 ) showCancelDialog()
                         true
                     }
                     R.id.exitItem -> {
@@ -281,6 +279,13 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                 UIUtil.showKeyboard(this@MainActivity, searchViewQuery)
             }
         }
+    }
+
+    private fun deleteContact() {
+        ContactList.removeContact()
+        isDeleteModeOn = false
+        recyclerViewAdapter.notifyDataSetChanged()
+        setupOnSearchModeBackground(SearchMode.ONEXIT)
     }
 
     private fun filter(query: String?) {
@@ -350,4 +355,18 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     override fun onLongPress(view: View, contact: Contacts, position: Int) {
         isDeleteModeOn = true
     }
+
+    private fun showCancelDialog() {
+        val dialog = ConfirmationDialog.newInstance(R.string.remove_items_dialog_title, R.string.remove_items_dialog_message, R.string.button_delete, R.string.button_cancel)
+        dialog.show(supportFragmentManager, ConfirmationDialog.TAG)
+    }
+
+    override fun onPositiveButtonClicked() {
+        deleteContact()
+    }
+
+    override fun onNegativeButtonClicked() {}
+
+    override fun onNeutralButtonClicked() {}
 }
+

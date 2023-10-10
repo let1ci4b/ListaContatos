@@ -7,9 +7,10 @@ import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.AddContactBinding
-import com.example.recyclerlistacontatos.models.ContactList
+import com.example.recyclerlistacontatos.contactsList.ContactList
+import com.example.recyclerlistacontatos.models.ConfirmationDialog
 import com.example.recyclerlistacontatos.models.Contacts
-class AddContactActivity : AppCompatActivity() {
+class AddContactActivity : AppCompatActivity(), ConfirmationDialog.ConfirmationDialogListener {
     private lateinit var binding: AddContactBinding
     private var isFieldPhoneValidated: Boolean = false
     private var isFieldNameValidated: Boolean = false
@@ -19,17 +20,24 @@ class AddContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = AddContactBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.buttonSave.isEnabled = false
+        setupToolbar()
+        setupListeners()
+    }
+
+    private fun setupToolbar() {
         setSupportActionBar(binding.mainToolbar.mainToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         title = getString(R.string.tollbar_addcontact_title)
-        binding.buttonSave.isEnabled = false
-        setupListeners()
     }
+
     private fun setupListeners() {
         with(binding) {
+            mainToolbar.mainToolbar.setNavigationOnClickListener {
+                returnToMainActivity()
+            }
             buttonCancel.setOnClickListener {
-                if(fieldContactName.text.isNullOrEmpty() && fieldContactPhone.text.isNullOrEmpty()) finish()
-                else showCancelDialog()
+                returnToMainActivity()
             }
             buttonSave.setOnClickListener {
                 saveNewContact()
@@ -42,6 +50,14 @@ class AddContactActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun returnToMainActivity() {
+        with(binding) {
+            if(fieldContactName.text.isNullOrEmpty() && fieldContactPhone.text.isNullOrEmpty()) finish()
+            else showCancelDialog()
+        }
+    }
+
     private fun isFieldValidated(field: Field) {
         with(binding){
             when(field) {
@@ -82,19 +98,18 @@ class AddContactActivity : AppCompatActivity() {
     }
 
     private fun showCancelDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.button_cancel))
-            .setMessage(getString(R.string.cancel_dialog_message))
-            .setPositiveButton(getString(R.string.yes)){dialog, witch ->
-                finish()
-                printTextOnScreen(getString(R.string.unsaved_alterations_warning))
-            }
-            .setNegativeButton(getString(R.string.no)){dialog, witch ->
-                dialog.dismiss()
-            }
-        val alertDialog : AlertDialog = builder.create()
-        alertDialog.show()
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.box_stroke))
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(resources.getColor(R.color.box_stroke))
+        val dialog = ConfirmationDialog.newInstance(R.string.button_cancel, R.string.cancel_dialog_message, R.string.button_save, R.string.button_discard, R.string.button_cancel)
+        dialog.show(supportFragmentManager, ConfirmationDialog.TAG)
     }
+
+    override fun onPositiveButtonClicked() {
+        saveNewContact()
+    }
+
+    override fun onNegativeButtonClicked() {
+        finish()
+        printTextOnScreen(getString(R.string.unsaved_alterations_warning))
+    }
+
+    override fun onNeutralButtonClicked() {}
 }
