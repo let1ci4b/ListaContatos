@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
     /// TODO order list by alphabetic order
     /// TODO capture on back pressed reference on searchView
     /// TODO fix select all cards error on delete mode
-    /// TODO hide keyboard on searchView exit
 
     private var isDeleteModeOn : Boolean = false
         set(value) {
@@ -333,8 +332,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick {
                     recyclerView.visibility = View.VISIBLE
                     recyclerViewAdapter.filterList(ContactList.getList())
                     showNoContactsWarning()
-                    //searchViewQuery.clearFocus()
-                    //UIUtil.hideKeyboard(this@MainActivity)
+                    UIUtil.hideKeyboard(this@MainActivity, searchViewQuery)
                 }
             }
         }
