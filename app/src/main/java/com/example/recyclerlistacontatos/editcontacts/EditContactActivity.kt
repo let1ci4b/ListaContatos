@@ -2,7 +2,6 @@ package com.example.recyclerlistacontatos.editcontacts
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
@@ -11,6 +10,7 @@ import com.example.recyclerlistacontatos.databinding.EditContactBinding
 import com.example.recyclerlistacontatos.contactsList.ContactList
 import com.example.recyclerlistacontatos.models.ConfirmationDialog
 import com.example.recyclerlistacontatos.models.Contacts
+import java.lang.Character.isLetter
 
 class EditContactActivity : AppCompatActivity() , ConfirmationDialog.ConfirmationDialogListener {
     private lateinit var binding: EditContactBinding
@@ -109,7 +109,7 @@ class EditContactActivity : AppCompatActivity() , ConfirmationDialog.Confirmatio
             val shouldAddPhone = !ContactList.phoneExist(phone, position)
 
             if (shouldAddPhone) {
-                val contact = Contacts(name[0].toString().uppercase(), name, phone, false)
+                val contact = Contacts(firstNameLetter(name).uppercase(), name, phone, false)
                 ContactList.editContact(contact, position)
                 printTextOnScreen(name + getString(R.string.edited_contact_warning))
                 finish()
@@ -121,13 +121,24 @@ class EditContactActivity : AppCompatActivity() , ConfirmationDialog.Confirmatio
         Toast.makeText(this@EditContactActivity, warning, Toast.LENGTH_SHORT).show()
     }
 
+    private fun firstNameLetter(name: String) : String {
+        var nameInitial = ""
+        for (n in name) {
+            if (n.isLetter()) {
+                nameInitial = n.toString()
+                break
+            }
+        }
+        return nameInitial
+    }
+
     private fun showCancelDialog() {
         val dialog = ConfirmationDialog.newInstance(R.string.button_cancel, R.string.cancel_dialog_message, R.string.button_save, R.string.button_discard, R.string.button_cancel)
         dialog.show(supportFragmentManager, ConfirmationDialog.TAG)
     }
 
     override fun onPositiveButtonClicked() {
-        updateContactInformation()
+        if(binding.buttonSave.isEnabled) updateContactInformation()
     }
 
     override fun onNegativeButtonClicked() {

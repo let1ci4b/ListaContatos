@@ -3,12 +3,9 @@ package com.example.recyclerlistacontatos.models
 import androidx.appcompat.app.AppCompatDialogFragment
 import android.app.Dialog
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import com.example.recyclerlistacontatos.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-
 class ConfirmationDialog : AppCompatDialogFragment() {
-
     companion object {
         const val TAG = "ConfirmationDialog"
 
@@ -19,8 +16,10 @@ class ConfirmationDialog : AppCompatDialogFragment() {
         private const val NEUTRAL_BUTTON_TITLE = "NEUTRAL_BUTTON_TITLE"
         private const val FORMAT_ARGS = "FORMAT_ARGS"
 
-        fun newInstance(title: Int, message: Int, positiveButtonTitle: Int = R.string.button_save, negativeButtonTitle: Int = R.string.button_discard,
-                        neutralButtonTitle: Int? = R.string.button_cancel, vararg formatArgs: String): ConfirmationDialog {
+        fun newInstance(
+            title: Int, message: Int, positiveButtonTitle: Int = R.string.button_save, negativeButtonTitle: Int = R.string.button_discard,
+            neutralButtonTitle: Int? = null, vararg formatArgs: String
+        ): ConfirmationDialog {
             val args = Bundle()
 
             args.putInt(TITLE, title)
@@ -41,18 +40,16 @@ class ConfirmationDialog : AppCompatDialogFragment() {
 
             val title = arguments?.getInt(TITLE)
             val message = arguments?.getInt(MESSAGE)
+            val neutralButtonTitle =
+                arguments?.getInt(NEUTRAL_BUTTON_TITLE)
             val positiveButtonTitle =
                 arguments?.getInt(POSITIVE_BUTTON_TITLE) ?: R.string.button_save
             val negativeButtonTitle =
                 arguments?.getInt(NEGATIVE_BUTTON_TITLE) ?: R.string.button_cancel
-            val neutralButtonTitle =
-                arguments?.getInt(NEUTRAL_BUTTON_TITLE) ?: R.string.button_cancel
             val formatArgs = arguments?.getStringArray(FORMAT_ARGS)
-
             val listener = activity as? ConfirmationDialogListener
-
             val titleText = title?.let { getString(it) }
-
+            //val neutralButton = neutralButtonTitle?.let { getString(it) }
             val messageText = message?.let { messageRes ->
                 if (formatArgs?.isNotEmpty() == true) {
                     getString(messageRes, *formatArgs)
@@ -61,7 +58,26 @@ class ConfirmationDialog : AppCompatDialogFragment() {
                 }
             }
 
-            if (!titleText.isNullOrBlank() && !messageText.isNullOrBlank()) {
+            if (!titleText.isNullOrBlank() && !messageText.isNullOrBlank() && neutralButtonTitle != 0) {
+                neutralButtonTitle?.let {
+                    MaterialAlertDialogBuilder(activity)
+                        .setTitle(titleText)
+                        .setMessage(messageText)
+                        .setPositiveButton(positiveButtonTitle) { _, _ ->
+                            listener?.onPositiveButtonClicked()
+                            dismiss()
+                        }
+                        .setNegativeButton(negativeButtonTitle) { _, _ ->
+                            listener?.onNegativeButtonClicked()
+                            dismiss()
+                        }
+                        .setNeutralButton(it) { _, _ ->
+                            listener?.onNeutralButtonClicked()
+                            dismiss()
+                        }
+                        .create()
+                }
+            } else if (!titleText.isNullOrBlank() && !messageText.isNullOrBlank()) {
                 MaterialAlertDialogBuilder(activity)
                     .setTitle(titleText)
                     .setMessage(messageText)
@@ -73,12 +89,9 @@ class ConfirmationDialog : AppCompatDialogFragment() {
                         listener?.onNegativeButtonClicked()
                         dismiss()
                     }
-                    .setNeutralButton(neutralButtonTitle) {_, _ ->
-                        listener?.onNeutralButtonClicked()
-                        dismiss()
-                    }
                     .create()
-            } else throw IllegalArgumentException("Invalid String Resources")
+            }
+            else throw IllegalArgumentException("Invalid String Resources")
         } ?: throw IllegalArgumentException("Activity cannot be null")
     }
 

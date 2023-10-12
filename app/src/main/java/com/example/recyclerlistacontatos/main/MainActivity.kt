@@ -35,11 +35,8 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick, Confi
     var REQUEST_SEND_SMS = 2
     enum class SearchMode { NOSEARCH, NORESULT, RESULT, ONSEARCH, ONEXIT }
 
-    /// TODO adjust cardview border on swipe
-    /// TODO order list by alphabetic order
-    /// TODO capture on back pressed reference on searchView
-    /// TODO fix select all cards error on delete mode
-    /// TODO implement dialog on delete mode -> validate buttons quantity
+    /// TODO organize list in alphabetical order
+    /// TODO replace project to MVVM architecture
 
     private var isDeleteModeOn : Boolean = false
         set(value) {
@@ -79,8 +76,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick, Confi
         with(binding) {
             ContactList.isOnDeleteMode = false
             ContactList.clearCheckSelection()
-            selectAll.visibility = View.GONE
-            allSelected.visibility = View.GONE
+            selectionItems.visibility = View.GONE
             bottomBar.visibility = View.GONE
             bottomBarTitle.visibility = View.GONE
             showNoContactsWarning()
@@ -262,7 +258,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick, Confi
                 selectAll.visibility = View.GONE
                 allSelected.visibility = View.VISIBLE
                 isDeleteModeOn = true
-                ContactList.clearCheckSelection()
                 recyclerViewAdapter.notifyDataSetChanged()
             }
             allSelected.setOnClickListener {

@@ -1,7 +1,6 @@
 package com.example.recyclerlistacontatos.addcontacts
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
@@ -86,7 +85,7 @@ class AddContactActivity : AppCompatActivity(), ConfirmationDialog.ConfirmationD
             val phone = fieldContactPhone.text.toString()
             val shouldAddPhone = !ContactList.phoneExist(phone, null)
             if (shouldAddPhone) {
-                val contact = Contacts(name[0].toString().uppercase(), name, phone, false)
+                val contact = Contacts(firstNameLetter(name).uppercase(), name, phone, false)
                 ContactList.addContact(contact)
                 printTextOnScreen(name + getString(R.string.added_contact_warning))
                 finish()
@@ -97,13 +96,24 @@ class AddContactActivity : AppCompatActivity(), ConfirmationDialog.ConfirmationD
         Toast.makeText(this@AddContactActivity, warning, Toast.LENGTH_SHORT).show()
     }
 
+    private fun firstNameLetter(name: String) : String {
+        var nameInitial = ""
+        for (n in name) {
+            if(n.isLetter()) {
+                nameInitial = n.toString()
+                break
+            }
+        }
+        return nameInitial
+    }
+
     private fun showCancelDialog() {
         val dialog = ConfirmationDialog.newInstance(R.string.button_cancel, R.string.cancel_dialog_message, R.string.button_save, R.string.button_discard, R.string.button_cancel)
         dialog.show(supportFragmentManager, ConfirmationDialog.TAG)
     }
 
     override fun onPositiveButtonClicked() {
-        saveNewContact()
+        if(binding.buttonSave.isEnabled) saveNewContact()
     }
 
     override fun onNegativeButtonClicked() {

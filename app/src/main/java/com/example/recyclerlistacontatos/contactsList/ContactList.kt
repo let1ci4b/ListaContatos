@@ -7,29 +7,17 @@ object ContactList {
     private var contactList = arrayListOf<Contacts>()
     var isOnDeleteMode: Boolean = false
 
-    fun addContact(contact: Contacts){
-        contactList.add(contact)
-    }
+    fun addContact(contact: Contacts) = contactList.add(contact)
 
-    fun removeContact(){
-        contactList.removeAll { it.isChecked }
-    }
+    fun removeContact() = contactList.removeAll { it.isChecked }
 
-    fun editContact(contact: Contacts, position: Int) {
-        contactList[position] = contact
-    }
+    fun editContact(contact: Contacts, position: Int) { contactList[position] = contact }
 
-    fun listSize(): Int {
-        return contactList.size
-    }
+    fun listSize(): Int = contactList.size
 
-    fun getContact(position: Int): Contacts {
-        return contactList[position]
-    }
+    fun getContact(position: Int): Contacts = contactList[position]
 
-    fun getList(): ArrayList<Contacts> {
-        return contactList
-    }
+    fun getList(): ArrayList<Contacts> = contactList
 
     fun phoneExist(phone: String, position: Int?) : Boolean {
         return position?.let {
@@ -39,33 +27,18 @@ object ContactList {
 
     fun isContactUnchanged(name: String, phone: String, position: Int?) : Boolean {
         return position?.let {
-            contactList.any { contactList[position].numberContact == phone }
-                    && contactList.any { contactList[position].nameContact == name }
-        }!!
+            contactList[position].numberContact == phone && contactList[position].nameContact == name
+        } ?: false
     }
 
-    fun setupCheck(position: Int) {
-        contactList[position].isChecked = !(contactList[position].isChecked)
-    }
+    fun setupCheck(position: Int) { contactList[position].isChecked = !(contactList[position].isChecked) }
 
-    fun clearCheckSelection() {
-        for (contact in contactList) {
-            contact.isChecked = false
-        }
-    }
+    fun clearCheckSelection() = contactList.forEach { it.isChecked = false }
 
-    fun selectedItemsCount() : Int {
-        return contactList.filter { it.isChecked }.size
-    }
+    fun selectedItemsCount() : Int = contactList.filter { it.isChecked }.size
 
-    fun selectAll() {
-        for (contact in contactList) {
-            contact.isChecked = true
-        }
-    }
+    fun selectAll() = contactList.forEach { it.isChecked = true }
 
-    fun getContactPosition(contact: Contacts) : Int {
-        return contactList.indexOf(contact)
-    }
+    fun getContactPosition(contact: Contacts) : Int = contactList.indexOf(contact)
 }
 
