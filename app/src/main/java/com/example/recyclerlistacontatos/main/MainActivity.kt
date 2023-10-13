@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick, Confi
     }
 
     private fun setupRecyclerView() {
-        recyclerViewAdapter = RecyclerViewAdapter(ContactList.getList().sortedBy { it.nameContact }.toCollection(ArrayList<Contacts>()),
+        recyclerViewAdapter = RecyclerViewAdapter(ContactList.getList().sortedBy { it.nameContact.lowercase() }.toCollection(ArrayList<Contacts>()),
                                 binding.recyclerView, this)
 
         binding.recyclerView.apply {
@@ -217,7 +217,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick, Confi
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
-        recyclerViewAdapter.filterList(ContactList.getList().sortedBy { it.nameContact }.toCollection(ArrayList<Contacts>()))
+        recyclerViewAdapter.filterList(ContactList.getList().sortedBy { it.nameContact.lowercase() }.toCollection(ArrayList<Contacts>()))
         recyclerViewAdapter.notifyDataSetChanged()
         isDeleteModeOn = false
     }
@@ -295,7 +295,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick, Confi
         if(query?.isEmpty()!!) setupOnSearchModeBackground(SearchMode.NOSEARCH)
         else if(filteredlist.isEmpty() && !query?.isEmpty()!!) setupOnSearchModeBackground(SearchMode.NORESULT)
         else {
-            recyclerViewAdapter.filterList(filteredlist.sortedBy { it.nameContact }.toCollection(ArrayList<Contacts>()))
+            recyclerViewAdapter.filterList(filteredlist.sortedBy { it.nameContact.lowercase() }.toCollection(ArrayList<Contacts>()))
             setupOnSearchModeBackground(SearchMode.RESULT)
         }
     }
@@ -330,7 +330,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClick, Confi
                     searchBar.visibility = View.GONE
                     noContactsWarning.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
-                    recyclerViewAdapter.filterList(ContactList.getList().sortedBy { it.nameContact }.toCollection(ArrayList<Contacts>()))
+                    recyclerViewAdapter.filterList(ContactList.getList().sortedBy { it.nameContact.lowercase() }.toCollection(ArrayList<Contacts>()))
                     showNoContactsWarning()
                     UIUtil.hideKeyboard(this@MainActivity, searchViewQuery)
                 }
