@@ -40,11 +40,9 @@ class AddContactActivity : AppCompatActivity(), ConfirmationDialog.ConfirmationD
             }
             fieldContactName.doOnTextChanged { text, start, before, count ->
                 viewModel.isFieldValidated(Field.NAME, fieldContactName, layoutContactName)
-                buttonSave()
             }
             fieldContactPhone.doOnTextChanged { text, start, before, count ->
                 viewModel.isFieldValidated(Field.PHONE, fieldContactPhone, layoutContactPhone)
-                buttonSave()
             }
         }
     }
@@ -56,26 +54,13 @@ class AddContactActivity : AppCompatActivity(), ConfirmationDialog.ConfirmationD
         }
     }
 
-    private fun buttonSave() {
-        binding.buttonSave.isEnabled = viewModel.isFieldNameValidated && viewModel.isFieldPhoneValidated
-    }
-
     private fun saveNewContact() {
         with(binding) {
-            if(viewModel.contactSaved(extractName(fieldContactName.text.toString()), fieldContactPhone.text.toString())) {
-                printTextOnScreen(extractName(fieldContactName.text.toString()) + getString(R.string.added_contact_warning))
+            if(viewModel.contactSaved(viewModel.extractName(fieldContactName.text.toString()), fieldContactPhone.text.toString(), buttonSave)) {
+                printTextOnScreen(viewModel.extractName(fieldContactName.text.toString()) + getString(R.string.added_contact_warning))
                 finish()
             } else printTextOnScreen(getString(R.string.duplicated_contact_warning))
         }
-    }
-
-    private fun extractName(name: String) : String {
-        var extractedName = name
-        name.forEach { char ->
-            if(char.toString().isBlank()) extractedName = extractedName.drop(1)
-            else return@forEach
-        }
-        return extractedName
     }
 
     private fun printTextOnScreen(warning: String) {

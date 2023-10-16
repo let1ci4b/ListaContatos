@@ -1,5 +1,6 @@
 package com.example.recyclerlistacontatos.addcontacts
 
+import android.widget.Button
 import androidx.core.text.isDigitsOnly
 import com.example.recyclerlistacontatos.ContactsApplication
 import com.example.recyclerlistacontatos.contactsList.ContactList
@@ -37,12 +38,25 @@ class AddContactViewModel {
         }
     }
 
-    fun contactSaved(name: String, phone: String) : Boolean {
+    fun contactSaved(name: String, phone: String, saveButton: Button) : Boolean {
         val shouldAddPhone = !ContactList.phoneExist(phone, null)
         return if (shouldAddPhone) {
             val contact = Contacts(name[0].uppercase(), name, phone, false)
             ContactList.addContact(contact)
             true
         } else false
+
+        buttonSave(saveButton)
     }
+
+    fun extractName(name: String) : String {
+        var extractedName = name
+        name.forEach { char ->
+            if(char.toString().isBlank()) extractedName = extractedName.drop(1)
+            else return@forEach
+        }
+        return extractedName
+    }
+
+    private fun buttonSave(buttonSave: Button) { buttonSave.isEnabled = isFieldNameValidated && isFieldPhoneValidated }
 }

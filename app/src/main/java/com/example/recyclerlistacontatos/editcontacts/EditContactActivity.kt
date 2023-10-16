@@ -46,11 +46,9 @@ class EditContactActivity : AppCompatActivity() , ConfirmationDialog.Confirmatio
             }
             fieldContactName.doOnTextChanged { text, start, before, count ->
                 viewModel.isFieldValidated(Field.NAME, fieldContactName, layoutContactName)
-                buttonSave()
             }
             fieldContactPhone.doOnTextChanged { text, start, before, count ->
                 viewModel.isFieldValidated(Field.PHONE, fieldContactPhone, layoutContactPhone)
-                buttonSave()
             }
 
         }
@@ -63,30 +61,16 @@ class EditContactActivity : AppCompatActivity() , ConfirmationDialog.Confirmatio
         }
     }
 
-    private fun buttonSave() {
-        with(binding) {
-            binding.buttonSave.isEnabled = viewModel.isFieldNameValidated && viewModel.isFieldPhoneValidated
-                    && !viewModel.isContactUnchanged(fieldContactName.text.toString(), fieldContactPhone.text.toString(), position)
-        }
-    }
 
     private fun updateContactInformation() {
         with(binding) {
-            if(viewModel.updateContactInformation(extractName(fieldContactName.text.toString()), fieldContactPhone.text.toString(), position)) {
-                printTextOnScreen(extractName(fieldContactName.text.toString()) + getString(R.string.edited_contact_warning))
+            if(viewModel.updateContactInformation(viewModel.extractName(fieldContactName.text.toString()), fieldContactPhone.text.toString(), position, buttonSave)) {
+                printTextOnScreen(viewModel.extractName(fieldContactName.text.toString()) + getString(R.string.edited_contact_warning))
                 finish()
             } else printTextOnScreen(getString(R.string.duplicated_contact_warning))
         }
     }
 
-    private fun extractName(name: String) : String {
-        var extractedName = name
-        name.forEach { char ->
-            if(char.toString().isBlank()) extractedName = extractedName.drop(1)
-            else return@forEach
-        }
-        return extractedName
-    }
     private fun printTextOnScreen(warning: String) {
         Toast.makeText(this@EditContactActivity, warning, Toast.LENGTH_SHORT).show()
     }

@@ -1,6 +1,7 @@
 package com.example.recyclerlistacontatos.contactsList
 
 import com.example.recyclerlistacontatos.models.Contacts
+import com.google.gson.Gson
 
 object ContactList {
 
@@ -17,6 +18,7 @@ object ContactList {
 
     fun getContact(position: Int): Contacts = contactList[position]
 
+    /// TODO create deep copy
     fun getList(): ArrayList<Contacts> = contactList
 
     fun phoneExist(phone: String, position: Int?) : Boolean {
@@ -38,5 +40,10 @@ object ContactList {
     fun selectAll() = contactList.forEach { it.isChecked = true }
 
     fun getContactPosition(contact: Contacts) : Int = contactList.indexOf(contact)
+
+    fun deepCopy(): ContactList {
+        val JSON = Gson().toJson(this)
+        return Gson().fromJson(JSON, ContactList::class.java)
+    }
 }
 

@@ -1,5 +1,6 @@
 package com.example.recyclerlistacontatos.editcontacts
 
+import android.widget.Button
 import android.widget.TextView
 import androidx.core.text.isDigitsOnly
 import com.example.recyclerlistacontatos.ContactsApplication
@@ -46,16 +47,30 @@ class EditContactViewModel {
         }
     }
 
-    fun updateContactInformation(name: String, phone: String, position: Int) : Boolean {
+    fun updateContactInformation(name: String, phone: String, position: Int, saveButton: Button) : Boolean {
         val shouldAddPhone = !ContactList.phoneExist(phone, position)
         return if (shouldAddPhone) {
             val contact = Contacts(name[0].uppercase(), name, phone, false)
             ContactList.editContact(contact, position)
             true
         } else false
+
+        buttonSave(saveButton, name, phone, position)
     }
 
-    fun isContactUnchanged(name: String, phone:String, position: Int) : Boolean {
-        return ContactList.isContactUnchanged(name, phone, position)
+    fun extractName(name: String) : String {
+        var extractedName = name
+        name.forEach { char ->
+            if(char.toString().isBlank()) extractedName = extractedName.drop(1)
+            else return@forEach
+        }
+        return extractedName
     }
+
+    private fun buttonSave(buttonSave: Button, name: String, phone: String, position: Int) {
+        buttonSave.isEnabled = isFieldNameValidated && isFieldPhoneValidated
+                && !isContactUnchanged(name, phone, position)
+    }
+
+    fun isContactUnchanged(name: String, phone:String, position: Int) = ContactList.isContactUnchanged(name, phone, position)
 }
