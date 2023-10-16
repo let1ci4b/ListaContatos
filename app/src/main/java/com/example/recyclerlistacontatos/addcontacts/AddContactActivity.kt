@@ -2,18 +2,15 @@ package com.example.recyclerlistacontatos.addcontacts
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doOnTextChanged
 import com.example.recyclerlistacontatos.R
 import com.example.recyclerlistacontatos.databinding.AddContactBinding
-import com.example.recyclerlistacontatos.contactsList.ContactList
 import com.example.recyclerlistacontatos.models.ConfirmationDialog
-import com.example.recyclerlistacontatos.models.Contacts
+import com.example.recyclerlistacontatos.models.Field
+
 class AddContactActivity : AppCompatActivity(), ConfirmationDialog.ConfirmationDialogListener {
     private lateinit var binding: AddContactBinding
-    private var isFieldPhoneValidated: Boolean = false
-    private var isFieldNameValidated: Boolean = false
-    enum class Field { NAME, PHONE }
+    private var viewModel: AddContactViewModel = AddContactViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +39,12 @@ class AddContactActivity : AppCompatActivity(), ConfirmationDialog.ConfirmationD
                 saveNewContact()
             }
             fieldContactName.doOnTextChanged { text, start, before, count ->
-                isFieldValidated(Field.NAME)
+                viewModel.isFieldValidated(Field.NAME, fieldContactName, layoutContactName)
+                buttonSave()
             }
             fieldContactPhone.doOnTextChanged { text, start, before, count ->
-                isFieldValidated(Field.PHONE)
+                viewModel.isFieldValidated(Field.PHONE, fieldContactPhone, layoutContactPhone)
+                buttonSave()
             }
         }
     }
@@ -57,58 +56,35 @@ class AddContactActivity : AppCompatActivity(), ConfirmationDialog.ConfirmationD
         }
     }
 
-    private fun isFieldValidated(field: Field) {
-        with(binding){
-            when(field) {
-                Field.NAME -> {
-                    if(fieldContactName.text.toString().isBlank()) layoutContactName.error = getString(R.string.empty_name_warning)
-                    else layoutContactName.error = null
-                    isFieldNameValidated = (layoutContactName.error.isNullOrEmpty())
-
-                }
-                Field.PHONE -> {
-                    if(!fieldContactPhone.text?.toString()?.isDigitsOnly()!!) layoutContactPhone.error = getString(R.string.incorrect_phone_format_warning)
-                    else if(fieldContactPhone.text?.toString()?.length != 11) layoutContactPhone.error = getString(R.string.incorrect_phone_size_warning)
-                    else layoutContactPhone.error = null
-                    isFieldPhoneValidated = (layoutContactPhone.error.isNullOrEmpty())
-                }
-            }
-            buttonSave()
-        }
-    }
     private fun buttonSave() {
-        binding.buttonSave.isEnabled = isFieldNameValidated && isFieldPhoneValidated
+        binding.buttonSave.isEnabled = viewModel.isFieldNameValidated && viewModel.isFieldPhoneValidated
     }
+
     private fun saveNewContact() {
         with(binding) {
-            val name = fieldContactName.text.toString()
-            val phone = fieldContactPhone.text.toString()
-            val shouldAddPhone = !ContactList.phoneExist(phone, null)
-            if (shouldAddPhone) {
-                val contact = Contacts(firstNameLetter(name).uppercase(), name, phone, false)
-                ContactList.addContact(contact)
-                printTextOnScreen(name + getString(R.string.added_contact_warning))
+            if(viewModel.contactSaved(extractName(fieldContactName.text.toString()), fieldContactPhone.text.toString())) {
+                printTextOnScreen(extractName(fieldContactName.text.toString()) + getString(R.string.added_contact_warning))
                 finish()
             } else printTextOnScreen(getString(R.string.duplicated_contact_warning))
         }
     }
+
+    private fun extractName(name: String) : String {
+        var extractedName = name
+        name.forEach { char ->
+            if(char.toString().isBlank()) extractedName = extractedName.drop(1)
+            else return@forEach
+        }
+        return extractedName
+    }
+
     private fun printTextOnScreen(warning: String) {
         Toast.makeText(this@AddContactActivity, warning, Toast.LENGTH_SHORT).show()
     }
 
-    private fun firstNameLetter(name: String) : String {
-        var nameInitial = ""
-        for (n in name) {
-            if(n.isLetter()) {
-                nameInitial = n.toString()
-                break
-            }
-        }
-        return nameInitial
-    }
-
     private fun showCancelDialog() {
-        val dialog = ConfirmationDialog.newInstance(R.string.button_cancel, R.string.cancel_dialog_message, R.string.button_save, R.string.button_discard, R.string.button_cancel)
+        val dialog = ConfirmationDialog.newInstance(R.string.button_cancel, R.string.cancel_dialog_message, R.string.button_save,
+                                                    R.string.button_discard, R.string.button_cancel)
         dialog.show(supportFragmentManager, ConfirmationDialog.TAG)
     }
 

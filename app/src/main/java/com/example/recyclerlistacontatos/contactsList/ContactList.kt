@@ -35,8 +35,6 @@ object ContactList {
 
     fun clearCheckSelection() = contactList.forEach { it.isChecked = false }
 
-    fun selectedItemsCount() : Int = contactList.filter { it.isChecked }.size
-
     fun selectAll() = contactList.forEach { it.isChecked = true }
 
     fun getContactPosition(contact: Contacts) : Int = contactList.indexOf(contact)
